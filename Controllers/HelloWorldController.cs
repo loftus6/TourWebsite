@@ -3,8 +3,10 @@ using System.Text.Encodings.Web;
 
 namespace MvcMovie.Controllers;
 
+//This class is for testing and should be removed later
 public class HelloWorldController : Controller
 {
+
     // 
     // GET: /HelloWorld/
     public IActionResult Index()
@@ -15,8 +17,10 @@ public class HelloWorldController : Controller
     // GET: /HelloWorld/Welcome/ 
     // GET: /HelloWorld/Welcome/ 
     // Requires using System.Text.Encodings.Web;
-    public string Welcome(string name, int numTimes = 1)
+    public IActionResult Welcome(string name, int numTimes = 1)
     {
-        return HtmlEncoder.Default.Encode($"Hello {name}, NumTimes is: {numTimes}");
+        ViewData["Message"] = "Hello " + name;
+        ViewData["NumTimes"] = numTimes;
+        return View();
     }
 }
