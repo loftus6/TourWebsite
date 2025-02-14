@@ -11,7 +11,7 @@ using TourWebsite.Data;
 namespace TourWebsite.Migrations
 {
     [DbContext(typeof(TourWebsiteContext))]
-    [Migration("20250213201334_InitialCreate")]
+    [Migration("20250214134430_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,13 +32,15 @@ namespace TourWebsite.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<string>("Coordinates")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Lattitude")
+                        .HasColumnType("decimal(25, 8)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(25, 8)");
 
                     b.Property<string>("Title")
                         .IsRequired()

@@ -54,7 +54,7 @@ namespace TourWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Coordinates")] TourSite tourSite)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace TourWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Coordinates")] TourSite tourSite)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
         {
             if (id != tourSite.Id)
             {

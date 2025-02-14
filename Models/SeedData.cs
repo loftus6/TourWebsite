@@ -25,13 +25,15 @@ public static class SeedData
                 {
                     Title = "Place1",
                     Description = "Test Descrip 1",
-                    Coordinates = [0, 0, 0]
+                    Longitude = 0,
+                    Lattitude = 0,
                 },
                 new TourSite
                 {
                     Title = "Place2",
                     Description = "Test Descrip 2",
-                    Coordinates = [0, 0, 0.5431]
+                    Longitude = 0.5,
+                    Lattitude = 400,
                 }
 
             );

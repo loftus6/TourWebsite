@@ -29,13 +29,15 @@ namespace TourWebsite.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<string>("Coordinates")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Lattitude")
+                        .HasColumnType("decimal(25, 8)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("decimal(25, 8)");
 
                     b.Property<string>("Title")
                         .IsRequired()
