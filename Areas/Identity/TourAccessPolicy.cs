@@ -10,7 +10,7 @@ namespace TourWebsite.Areas.Identity
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, TourAccessPolicy requirement)
         {
-            string[] allowedUsers = context.Resource as string[];
+            List<string> allowedUsers = context.Resource as List<string>;
 
             if (context.User.IsInRole("Admin") || context.User.IsInRole("Editor")) //Admins and editors can access any page
             {
@@ -24,7 +24,7 @@ namespace TourWebsite.Areas.Identity
             //    return Task.CompletedTask;
             //}
 
-            if(allowedUsers== null)
+            if (allowedUsers == null)
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

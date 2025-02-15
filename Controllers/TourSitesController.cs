@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TourWebsite.Areas.Identity.Data;
+using TourWebsite.Areas.Identity.Pages.Account;
 using TourWebsite.Data;
 using TourWebsite.Models;
 using TourWebsite.Models.Tours;
@@ -63,8 +65,7 @@ namespace TourWebsite.Controllers
             if (authorized.Succeeded)
                 return View(tourSite);
             else
-                return new ChallengeResult();
-
+                return NotFound();
         }
 
         // GET: TourSites/Create
@@ -106,21 +107,30 @@ namespace TourWebsite.Controllers
                 return NotFound();
             }
 
+            var allowedUsers = tourSite.ApprovedEditUsers;
 
-            TourEdit edit = new TourEdit();
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+
+            if (!authorized.Succeeded)
+            {
+                return RedirectToAction(nameof(new AccessDeniedModel));
+            }
+
+                TourEdit edit = new TourEdit();
 
             List<TourWebsiteUser> members = new List<TourWebsiteUser>();
             List<TourWebsiteUser> nonMembers = new List<TourWebsiteUser>();
 
-            var ids = tourSite.ApprovedEditUsers;
 
-            if (ids != null)
+            if (allowedUsers != null)
             {
-                foreach (var _id in ids)
+                foreach (var _id in allowedUsers)
                 {
                     members.Add(await userManager.FindByIdAsync(_id));
                 }
             }
+
+
 
             edit.TourSite = tourSite;
             edit.Members = members;
@@ -146,37 +156,52 @@ namespace TourWebsite.Controllers
                 {
                     return NotFound();
                 }
+
+                var allowedUsers = tourSite.ApprovedEditUsers;
+                AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+
+                if (!authorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
+
                 tourSite.Title = tourModification.TourName;
                 tourSite.Description = tourModification.TourDescription;
                 tourSite.Longitude = tourModification.Longitude;
                 tourSite.Lattitude = tourModification.Longitude;
+
+                List<string> newApprovedUsers = new List<string>();
+
+                if (allowedUsers != null)
+                {
+                    foreach (string user in allowedUsers)
+                    {
+                        newApprovedUsers.Add(user);
+                    }
+                }
+
 
                 if (tourModification.AddEmail != null)
                 {
                     TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmail);
                     if (user1 != null)
                     {
-                        if (tourSite.ApprovedEditUsers == null)
-                        {
-                            tourSite.ApprovedEditUsers = new string[] { user1.Id };
-                        }
-                        else
-                        {
-                            tourSite.ApprovedEditUsers.Append(user1.Id);
-                        }
+    
+                        newApprovedUsers.Add(user1.Id);
+  
                     }
                 }
 
-                if (tourModification.DeleteIds is not null && tourSite.ApprovedEditUsers is not null) {
-                    var list = tourSite.ApprovedEditUsers.OfType<string>().ToList();
+                if (tourModification.DeleteIds != null) {
             
                     foreach (string userId in tourModification.DeleteIds)
                     {
-                        list.Remove(userId);
+                        newApprovedUsers.Remove(userId);
                     }
 
-                    tourSite.ApprovedEditUsers = list.ToArray();
                 }
+
+                tourSite.ApprovedEditUsers = newApprovedUsers;
 
 
                 try
@@ -195,7 +220,7 @@ namespace TourWebsite.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
             return await Edit(tourModification.TourID);
         }
