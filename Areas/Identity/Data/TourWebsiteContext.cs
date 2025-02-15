@@ -22,5 +22,5 @@ public class TourWebsiteContext : IdentityDbContext<TourWebsiteUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 
-public DbSet<TourWebsite.Areas.Identity.Data.TourWebsiteRole> TourWebsiteRole { get; set; } = default!;
+    public DbSet<TourWebsite.Areas.Identity.Data.TourWebsiteRole> TourWebsiteRole { get; set; } = default!;
 }

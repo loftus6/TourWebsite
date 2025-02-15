@@ -9,7 +9,10 @@ namespace TourWebsite.Models.Roles
 
         public string RoleId { get; set; }
 
-        public string[]? AddIds { get; set; }
+
+
+        [EmailAddress(ErrorMessage = "Invalid Email.")]
+        public string? AddEmail { get; set; }
 
         public string[]? DeleteIds { get; set; }
     }

@@ -25,7 +25,9 @@ namespace TourWebsite.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<TourWebsiteUser> _signInManager;
+
         private readonly UserManager<TourWebsiteUser> _userManager;
+
         private readonly IUserStore<TourWebsiteUser> _userStore;
         private readonly IUserEmailStore<TourWebsiteUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -114,6 +116,8 @@ namespace TourWebsite.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -188,7 +189,7 @@ namespace TourWebsite.Controllers
             {
                 Role = role,
                 Members = members,
-                NonMembers = nonMembers
+                Email = ""
             });
         }
 
@@ -198,12 +199,13 @@ namespace TourWebsite.Controllers
             IdentityResult result;
             if (ModelState.IsValid)
             {
-                foreach (string userId in model.AddIds ?? new string[] { })
+
+                if (model.AddEmail != null)
                 {
-                    TourWebsiteUser user = await userManager.FindByIdAsync(userId);
-                    if (user != null)
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(model.AddEmail);
+                    if (user1 != null)
                     {
-                        result = await userManager.AddToRoleAsync(user, model.RoleName);
+                        result = await userManager.AddToRoleAsync(user1, model.RoleName);
                         if (!result.Succeeded)
                             return NotFound();
                     }
@@ -218,12 +220,12 @@ namespace TourWebsite.Controllers
                             return NotFound();
                     }
                 }
+                
             }
 
-            if (ModelState.IsValid)
-                return RedirectToAction(nameof(Index));
-            else
-                return await Update(model.RoleId);
+
+
+            return await Update(model.RoleId);
         }
     }
 }

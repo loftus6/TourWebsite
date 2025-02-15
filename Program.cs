@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TourWebsite.Areas;
+using TourWebsite.Areas.Identity;
 using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
+using TourWebsite.Models;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TourWebsiteContextConnection") ?? throw new InvalidOperationException("Connection string 'TourWebsiteContextConnection' not found.");;
 
@@ -45,7 +49,25 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+
+builder.Services.AddTransient<IAuthorizationHandler, TourAccessPolicyHandler>();
+builder.Services.AddAuthorization(opts =>
+{
+    opts.AddPolicy("TourAccess", policy =>
+    {
+        policy.AddRequirements(new TourAccessPolicy());
+    });
+});
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -58,6 +80,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -66,6 +89,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -79,6 +103,7 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new TourWebsiteRole(role));
     }
 }
+
 
 
 using (var scope = app.Services.CreateScope()) //TODO DELETE THIS

@@ -14,10 +14,12 @@ namespace TourWebsite.Controllers
     public class TourSitesController : Controller
     {
         private readonly TourWebsiteContext _context;
+        private IAuthorizationService authService;
 
-        public TourSitesController(TourWebsiteContext context)
+        public TourSitesController(TourWebsiteContext context, IAuthorizationService auth)
         {
             _context = context;
+            authService = auth;
         }
 
         // GET: TourSites
@@ -29,21 +31,34 @@ namespace TourWebsite.Controllers
         }
 
         // GET: TourSites/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
+          
+
             if (id == null)
             {
                 return NotFound();
             }
 
+
+
             var tourSite = await _context.TourSites
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (tourSite == null)
             {
                 return NotFound();
             }
+            var allowedUsers = tourSite.ApprovedUsers;
 
-            return View(tourSite);
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+
+
+            if (authorized.Succeeded)
+                return View(tourSite);
+            else
+                return new ChallengeResult();
+
         }
 
         // GET: TourSites/Create
@@ -93,7 +108,7 @@ namespace TourWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
         {
             if (id != tourSite.Id)
             {
@@ -125,7 +140,7 @@ namespace TourWebsite.Controllers
 
         // GET: TourSites/Delete/5
         [Authorize]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
@@ -158,7 +173,7 @@ namespace TourWebsite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TourSiteExists(int id)
+        private bool TourSiteExists(string id)
         {
             return _context.TourSites.Any(e => e.Id == id);
         }
