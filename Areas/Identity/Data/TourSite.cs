@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TourWebsite.Models
 {
@@ -6,9 +7,11 @@ namespace TourWebsite.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
+        [Range(-180, 180)]
         [Column(TypeName = "decimal(25, 8)")]
         public double Longitude { get; set; }
+        [Range(-90, 90)]
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 

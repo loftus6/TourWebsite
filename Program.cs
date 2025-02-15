@@ -7,7 +7,7 @@ var connectionString = builder.Configuration.GetConnectionString("TourWebsiteCon
 
 builder.Services.AddDbContext<TourWebsiteContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<TourWebsiteUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TourWebsiteContext>();
+builder.Services.AddDefaultIdentity<TourWebsiteUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<TourWebsiteRole>().AddEntityFrameworkStores<TourWebsiteContext>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
