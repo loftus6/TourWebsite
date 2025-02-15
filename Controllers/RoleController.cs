@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
+using TourWebsite.Models.Roles;
 
 namespace TourWebsite.Controllers
 {
@@ -14,18 +17,28 @@ namespace TourWebsite.Controllers
     {
         private readonly TourWebsiteContext _context;
 
-        public RoleController(TourWebsiteContext context)
+ 
+
+        private RoleManager<TourWebsiteRole> roleManager;
+        private UserManager<TourWebsiteUser> userManager;
+
+        public RoleController(TourWebsiteContext context, RoleManager<TourWebsiteRole> roleMgr, UserManager<TourWebsiteUser> userMrg)
+
         {
             _context = context;
+            roleManager = roleMgr;
+            userManager = userMrg;
         }
 
         // GET: Role
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.TourWebsiteRole.ToListAsync());
         }
 
         // GET: Role/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -44,6 +57,7 @@ namespace TourWebsite.Controllers
         }
 
         // GET: Role/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +68,7 @@ namespace TourWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
         {
             if (ModelState.IsValid)
@@ -66,6 +81,7 @@ namespace TourWebsite.Controllers
         }
 
         // GET: Role/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -86,6 +102,7 @@ namespace TourWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
         {
             if (id != tourWebsiteRole.Id)
@@ -117,6 +134,7 @@ namespace TourWebsite.Controllers
         }
 
         // GET: Role/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -137,6 +155,7 @@ namespace TourWebsite.Controllers
         // POST: Role/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var tourWebsiteRole = await _context.TourWebsiteRole.FindAsync(id);
@@ -152,6 +171,59 @@ namespace TourWebsite.Controllers
         private bool TourWebsiteRoleExists(string id)
         {
             return _context.TourWebsiteRole.Any(e => e.Id == id);
+        }
+
+        //based on https://www.yogihosting.com/aspnet-core-identity-roles/
+        public async Task<IActionResult> Update(string id)
+        {
+            TourWebsiteRole role = await roleManager.FindByIdAsync(id);
+            List<TourWebsiteUser> members = new List<TourWebsiteUser>();
+            List<TourWebsiteUser> nonMembers = new List<TourWebsiteUser>();
+            foreach (TourWebsiteUser user in userManager.Users)
+            {
+                var list = await userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
+                list.Add(user);
+            }
+            return View(new RoleEdit
+            {
+                Role = role,
+                Members = members,
+                NonMembers = nonMembers
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(RoleModification model)
+        {
+            IdentityResult result;
+            if (ModelState.IsValid)
+            {
+                foreach (string userId in model.AddIds ?? new string[] { })
+                {
+                    TourWebsiteUser user = await userManager.FindByIdAsync(userId);
+                    if (user != null)
+                    {
+                        result = await userManager.AddToRoleAsync(user, model.RoleName);
+                        if (!result.Succeeded)
+                            return NotFound();
+                    }
+                }
+                foreach (string userId in model.DeleteIds ?? new string[] { })
+                {
+                    TourWebsiteUser user = await userManager.FindByIdAsync(userId);
+                    if (user != null)
+                    {
+                        result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
+                        if (!result.Succeeded)
+                            return NotFound();
+                    }
+                }
+            }
+
+            if (ModelState.IsValid)
+                return RedirectToAction(nameof(Index));
+            else
+                return await Update(model.RoleId);
         }
     }
 }

@@ -66,6 +66,41 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<TourWebsiteRole>>();
+
+    var roles = new[] { "Admin", "Editor", "User" };
+
+    foreach (var role in roles)
+    {
+        if(!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new TourWebsiteRole(role));
+    }
+}
+
+
+using (var scope = app.Services.CreateScope()) //TODO DELETE THIS
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TourWebsiteUser>>();
+
+    string email = "admin@admin.com";
+    string pwd = "Admin1234!";
+
+
+    if (await userManager.FindByEmailAsync(email) == null) {
+        var user = new TourWebsiteUser();
+        user.UserName = email;
+        user.Email = email;
+        user.EmailConfirmed = true;
+
+        await userManager.CreateAsync(user, pwd);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+
+}
 app.MapRazorPages();
 
 app.Run();
