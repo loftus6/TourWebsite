@@ -20,6 +20,7 @@ namespace TourWebsite.Models
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 
+        public string[]? ApprovedEditUsers { get; set; }
         public string[]? ApprovedUsers { get; set; }
 
     }

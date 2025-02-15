@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
 using TourWebsite.Models;
+using TourWebsite.Models.Tours;
 
 namespace TourWebsite.Controllers
 {
@@ -15,11 +19,13 @@ namespace TourWebsite.Controllers
     {
         private readonly TourWebsiteContext _context;
         private IAuthorizationService authService;
+        private UserManager<TourWebsiteUser> userManager;
 
-        public TourSitesController(TourWebsiteContext context, IAuthorizationService auth)
+        public TourSitesController(TourWebsiteContext context, IAuthorizationService auth, UserManager<TourWebsiteUser> userManager)
         {
             _context = context;
             authService = auth;
+            this.userManager = userManager;
         }
 
         // GET: TourSites
@@ -87,7 +93,7 @@ namespace TourWebsite.Controllers
 
         // GET: TourSites/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
@@ -99,7 +105,26 @@ namespace TourWebsite.Controllers
             {
                 return NotFound();
             }
-            return View(tourSite);
+
+
+            TourEdit edit = new TourEdit();
+
+            List<TourWebsiteUser> members = new List<TourWebsiteUser>();
+            List<TourWebsiteUser> nonMembers = new List<TourWebsiteUser>();
+
+            var ids = tourSite.ApprovedEditUsers;
+
+            if (ids != null)
+            {
+                foreach (var _id in ids)
+                {
+                    members.Add(await userManager.FindByIdAsync(_id));
+                }
+            }
+
+            edit.TourSite = tourSite;
+            edit.Members = members;
+            return View(edit);
         }
 
         // POST: TourSites/Edit/5
@@ -108,15 +133,52 @@ namespace TourWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
+        public async Task<IActionResult> Edit(TourModification tourModification)
         {
-            if (id != tourSite.Id)
-            {
-                return NotFound();
-            }
+
+
 
             if (ModelState.IsValid)
             {
+                var tourSite = await _context.TourSites.FindAsync(tourModification.TourID);
+
+                if (tourSite is null)
+                {
+                    return NotFound();
+                }
+                tourSite.Title = tourModification.TourName;
+                tourSite.Description = tourModification.TourDescription;
+                tourSite.Longitude = tourModification.Longitude;
+                tourSite.Lattitude = tourModification.Longitude;
+
+                if (tourModification.AddEmail != null)
+                {
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmail);
+                    if (user1 != null)
+                    {
+                        if (tourSite.ApprovedEditUsers == null)
+                        {
+                            tourSite.ApprovedEditUsers = new string[] { user1.Id };
+                        }
+                        else
+                        {
+                            tourSite.ApprovedEditUsers.Append(user1.Id);
+                        }
+                    }
+                }
+
+                if (tourModification.DeleteIds is not null && tourSite.ApprovedEditUsers is not null) {
+                    var list = tourSite.ApprovedEditUsers.OfType<string>().ToList();
+            
+                    foreach (string userId in tourModification.DeleteIds)
+                    {
+                        list.Remove(userId);
+                    }
+
+                    tourSite.ApprovedEditUsers = list.ToArray();
+                }
+
+
                 try
                 {
                     _context.Update(tourSite);
@@ -135,7 +197,7 @@ namespace TourWebsite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tourSite);
+            return await Edit(tourModification.TourID);
         }
 
         // GET: TourSites/Delete/5
