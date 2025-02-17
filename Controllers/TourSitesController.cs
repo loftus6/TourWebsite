@@ -113,7 +113,7 @@ namespace TourWebsite.Controllers
 
             if (!authorized.Succeeded)
             {
-                return RedirectToAction(nameof(new AccessDeniedModel));
+                return RedirectToAction(nameof(Index));
             }
 
                 TourEdit edit = new TourEdit();
