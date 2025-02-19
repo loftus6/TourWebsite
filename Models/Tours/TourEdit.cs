@@ -9,6 +9,7 @@ namespace TourWebsite.Models.Tours
         public TourSite TourSite { get; set; }
 
         public IEnumerable<TourWebsiteUser> Members { get; set; }
+        public IEnumerable<TourWebsiteUser> Viewers { get; set; }
 
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
         [Required]

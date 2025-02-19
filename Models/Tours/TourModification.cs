@@ -16,9 +16,17 @@ namespace TourWebsite.Models.Tours
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 
+        public VisibilityType Visibility { get; set; }
+
         [EmailAddress(ErrorMessage = "Invalid Email.")]
         public string? AddEmail { get; set; }
 
         public string[]? DeleteIds { get; set; }
+
+
+        [EmailAddress(ErrorMessage = "Invalid Email.")]
+        public string? AddEmailViewer { get; set; }
+
+        public string[]? DeleteIdsViewer { get; set; }
     }
 }

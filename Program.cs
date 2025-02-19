@@ -6,6 +6,10 @@ using TourWebsite.Areas.Identity;
 using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
 using TourWebsite.Models;
+
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TourWebsiteContextConnection") ?? throw new InvalidOperationException("Connection string 'TourWebsiteContextConnection' not found.");;
 
@@ -41,8 +45,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.LoginPath = Globals.LoginPath;
+    options.AccessDeniedPath = Globals.AccessDeniedPath;
     options.SlidingExpiration = true;
 });
 

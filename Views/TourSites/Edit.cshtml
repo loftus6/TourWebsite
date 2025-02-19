@@ -16,46 +16,81 @@
             <input type="hidden" name="TourID" value="@Model.TourSite.Id" />
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="TourName" class="control-label"></label>
+                    <label name="TourName" class="control-label">Title</label>
                     <input name="TourName" class="form-control" value="@Model.TourSite.Title" />
                     <span asp-validation-for="TourSite.Title" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="TourDescription" class="control-label"></label>
+                    <label name="TourDescription" class="control-label">Description</label>
                     <input name="TourDescription" class="form-control" value="@Model.TourSite.Description" />
                     <span asp-validation-for="TourSite.Description" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="Longitude" class="control-label"></label>
+                    <label name="Longitude" class="control-label">Longitude</label>
                     <input name="Longitude" class="form-control" value="@Model.TourSite.Longitude" />
                     <span asp-validation-for="TourSite.Longitude" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="Lattitude" class="control-label"></label>
+                    <label name="Lattitude" class="control-label">Latitude</label>
                     <input name="Lattitude" class="form-control" value="@Model.TourSite.Lattitude" />
                     <span asp-validation-for="TourSite.Lattitude" class="text-danger"></span>
                 </div>
             </table>
+            <label>Visibility</label>
+            <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
+                <option selected="selected" value="@Model.TourSite.Visibility">Currently: @Model.TourSite.Visibility</option>
+
+            </select>
+
+            @if (Model.TourSite.Visibility == VisibilityType.Restricted) {
+                <table class="table table-bordered table-sm">
+                    <div type="email" class="form-group">
+                        <label name="AddEmailViewer" class="control-label">Add Viewers</label>
+                        <input name="AddEmailViewer" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </table>
+
+                <label>Remove viewers from @Model.TourSite.Title</label>
+                <table class="table table-bordered table-sm">
+                    @if (Model.Viewers.Count() == 0)
+                    {
+                        <tr><td colspan="2">No Users Are Viewers</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (TourWebsiteUser user in Model.Viewers)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>
+                                    <input type="checkbox" name="DeleteIdsViewer" value="@user.Email">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
 
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
-                    <label name="AddEmail" class="control-label"></label>
+                    <label name="AddEmail" class="control-label">Add editors</label>
                     <input name="AddEmail" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </table>
 
-            <h2>Remove From @Model.TourSite.Title</h2>
+            <label>Remove editors from @Model.TourSite.Title</label>
             <table class="table table-bordered table-sm">
                 @if (Model.Members.Count() == 0)
                 {
-                    <tr><td colspan="2">No Users Are Members</td></tr>
+                    <tr><td colspan="2">No Users Are Editors</td></tr>
                 }
                 else
                 {
@@ -64,7 +99,7 @@
                         <tr>
                             <td>@user.UserName</td>
                             <td>
-                                <input type="checkbox" name="DeleteIds" value="@user.Id">
+                                <input type="checkbox" name="DeleteIds" value="@user.Email">
                             </td>
                         </tr>
                     }

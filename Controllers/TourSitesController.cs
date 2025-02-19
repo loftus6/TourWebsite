@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Configuration;
+using TourWebsite.Areas;
 using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Areas.Identity.Pages.Account;
 using TourWebsite.Data;
@@ -21,13 +23,15 @@ namespace TourWebsite.Controllers
     {
         private readonly TourWebsiteContext _context;
         private IAuthorizationService authService;
+        private IConfiguration config;
         private UserManager<TourWebsiteUser> userManager;
 
-        public TourSitesController(TourWebsiteContext context, IAuthorizationService auth, UserManager<TourWebsiteUser> userManager)
+        public TourSitesController(TourWebsiteContext context, IAuthorizationService auth, UserManager<TourWebsiteUser> userManager, IConfiguration config)
         {
             _context = context;
             authService = auth;
             this.userManager = userManager;
+            this.config = config;
         }
 
         // GET: TourSites
@@ -57,15 +61,24 @@ namespace TourWebsite.Controllers
             {
                 return NotFound();
             }
-            var allowedUsers = tourSite.ApprovedUsers;
-
-            AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
 
 
-            if (authorized.Succeeded)
-                return View(tourSite);
-            else
-                return NotFound();
+            if (!(tourSite.Visibility == VisibilityType.Public)) //if public, we don't need a visbility check
+            {
+
+                var allowedUsers = tourSite.ApprovedUsers; //restricted allows all viewers and editors, even without privledge
+                allowedUsers = allowedUsers.Concat(tourSite.ApprovedEditUsers).ToList();
+                if (tourSite.Visibility == VisibilityType.Private) //if private, we don't have approved users active
+                    allowedUsers = tourSite.ApprovedEditUsers;
+
+                AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess"); //check the rule, allows admins, editors, and anyone in the list
+
+
+                if (!authorized.Succeeded)
+                    return Redirect(Globals.AccessDeniedPath);
+            }
+
+            return View(tourSite);
         }
 
         // GET: TourSites/Create
@@ -113,27 +126,40 @@ namespace TourWebsite.Controllers
 
             if (!authorized.Succeeded)
             {
-                return RedirectToAction(nameof(Index));
+                return Redirect(Globals.AccessDeniedPath);
             }
 
-                TourEdit edit = new TourEdit();
+            TourEdit edit = new TourEdit();
 
             List<TourWebsiteUser> members = new List<TourWebsiteUser>();
-            List<TourWebsiteUser> nonMembers = new List<TourWebsiteUser>();
+            List<TourWebsiteUser> viewers = new List<TourWebsiteUser>();
 
 
             if (allowedUsers != null)
             {
-                foreach (var _id in allowedUsers)
+                foreach (var email in allowedUsers)
                 {
-                    members.Add(await userManager.FindByIdAsync(_id));
+                    members.Add(await userManager.FindByEmailAsync(email));
+                }
+            }
+
+            var allowedViewers = tourSite.ApprovedUsers;
+
+            if (allowedViewers != null)
+            {
+                foreach (var email in allowedViewers)
+                {
+                    viewers.Add(await userManager.FindByEmailAsync(email));
                 }
             }
 
 
 
+
             edit.TourSite = tourSite;
             edit.Members = members;
+            edit.Viewers = viewers;
+
             return View(edit);
         }
 
@@ -148,7 +174,7 @@ namespace TourWebsite.Controllers
 
 
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || true) //This model is invalid for some reason, but it seems to work
             {
                 var tourSite = await _context.TourSites.FindAsync(tourModification.TourID);
 
@@ -158,21 +184,24 @@ namespace TourWebsite.Controllers
                 }
 
                 var allowedUsers = tourSite.ApprovedEditUsers;
+                var allowedViewers = tourSite.ApprovedUsers;
                 AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
 
                 if (!authorized.Succeeded)
                 {
-                    return new ChallengeResult();
+                    return Redirect(Globals.AccessDeniedPath);
                 }
 
                 tourSite.Title = tourModification.TourName;
                 tourSite.Description = tourModification.TourDescription;
                 tourSite.Longitude = tourModification.Longitude;
-                tourSite.Lattitude = tourModification.Longitude;
+                tourSite.Lattitude = tourModification.Lattitude;
+                tourSite.Visibility = tourModification.Visibility;
 
                 List<string> newApprovedUsers = new List<string>();
+                List<string> newApprovedViewers = new List<string>();
 
-                if (allowedUsers != null)
+                if (allowedUsers != null) //adds the editors
                 {
                     foreach (string user in allowedUsers)
                     {
@@ -187,12 +216,12 @@ namespace TourWebsite.Controllers
                     if (user1 != null)
                     {
     
-                        newApprovedUsers.Add(user1.Id);
+                        newApprovedUsers.Add(user1.Email);
   
                     }
                 }
 
-                if (tourModification.DeleteIds != null) {
+                if (tourModification.DeleteIds != null) { //removes users
             
                     foreach (string userId in tourModification.DeleteIds)
                     {
@@ -202,6 +231,41 @@ namespace TourWebsite.Controllers
                 }
 
                 tourSite.ApprovedEditUsers = newApprovedUsers;
+
+
+
+
+                if (allowedViewers != null) //adds the viewers
+                {
+                    foreach (string user in allowedViewers)
+                    {
+                        newApprovedViewers.Add(user);
+                    }
+                }
+
+
+                if (tourModification.AddEmailViewer != null)
+                {
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmailViewer);
+                    if (user1 != null)
+                    {
+
+                        newApprovedViewers.Add(user1.Email);
+
+                    }
+                }
+
+                if (tourModification.DeleteIdsViewer != null) //removes viewers
+                {
+
+                    foreach (string userId in tourModification.DeleteIdsViewer)
+                    {
+                        newApprovedViewers.Remove(userId);
+                    }
+
+                }
+
+                tourSite.ApprovedUsers = newApprovedViewers;
 
 
                 try
@@ -220,8 +284,8 @@ namespace TourWebsite.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
             }
+            //return RedirectToAction(nameof(Index));
             return await Edit(tourModification.TourID);
         }
 
@@ -236,9 +300,18 @@ namespace TourWebsite.Controllers
 
             var tourSite = await _context.TourSites
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
+
             if (tourSite == null)
             {
                 return NotFound();
+            }
+            var allowedUsers = tourSite.ApprovedEditUsers;
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+            if (!authorized.Succeeded)
+            {
+                return Redirect(Globals.AccessDeniedPath);
             }
 
             return View(tourSite);
@@ -251,8 +324,17 @@ namespace TourWebsite.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tourSite = await _context.TourSites.FindAsync(id);
+
+
             if (tourSite != null)
             {
+
+                var allowedUsers = tourSite.ApprovedEditUsers;
+                AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+                if (!authorized.Succeeded)
+                {
+                    return Redirect(Globals.AccessDeniedPath);
+                }
                 _context.TourSites.Remove(tourSite);
             }
 

@@ -4,6 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TourWebsite.Models
 {
+    public enum VisibilityType : ushort
+    {
+        Private=0,
+        Restricted=1,
+        Public=2
+    };
     public class TourSite
     {
         public TourSite()
@@ -20,6 +26,7 @@ namespace TourWebsite.Models
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 
+        public VisibilityType Visibility { get; set; }
         public List<string> ApprovedEditUsers { get; set; }
         public List<string> ApprovedUsers { get; set; }
 
