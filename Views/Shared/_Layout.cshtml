@@ -1,5 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization
+<!DOCTYPE html>
 <html lang="en">
+
+@inject IAuthorizationService auth
+
+@{
+    AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, "AdminAccess");
+}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,13 +18,13 @@
 
 
     @* TinyMCE text editor *@
-    <script type="text/javascript" src="~/js/tinymce/tinymce.min.js"/>
-    <script>
-    console.log("HI")
+        <script type="text/javascript" src="~/js/tinymce/tinymce.min.js"/>
+        <script>
+        console.log("HI")
         tinymce.init({
 
-          selector: 'textarea#tiny',
-          license_key: 'gpl'
+        selector: 'textarea#tiny',
+        license_key: 'gpl'
         });
 
     </script>
@@ -28,7 +35,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TourWebsite</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -36,15 +43,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="TourSites" asp-action="Index">Tour Sites</a>
                         </li>
+                        @if (authorized1.Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Administration</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>

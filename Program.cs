@@ -56,11 +56,16 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddTransient<IAuthorizationHandler, TourAccessPolicyHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, AdminAccessPolicyHandler>();
 builder.Services.AddAuthorization(opts =>
 {
     opts.AddPolicy("TourAccess", policy =>
     {
         policy.AddRequirements(new TourAccessPolicy());
+    });
+    opts.AddPolicy("AdminAccess", policy =>
+    {
+        policy.AddRequirements(new AdminAccessPolicy());
     });
 });
 
@@ -99,7 +104,7 @@ using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<TourWebsiteRole>>();
 
-    var roles = new[] { "Admin", "Editor", "User" };
+    var roles = new[] { "Admin", "Editor"};
 
     foreach (var role in roles)
     {

@@ -57,117 +57,117 @@ namespace TourWebsite.Controllers
             return View(tourWebsiteRole);
         }
 
-        // GET: Role/Create
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //// GET: Role/Create
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
         // POST: Role/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(int id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(tourWebsiteRole);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tourWebsiteRole);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Create(int id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(tourWebsiteRole);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(tourWebsiteRole);
+        //}
 
         // GET: Role/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Edit(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var tourWebsiteRole = await _context.TourWebsiteRole.FindAsync(id);
-            if (tourWebsiteRole == null)
-            {
-                return NotFound();
-            }
-            return View(tourWebsiteRole);
-        }
+        //    var tourWebsiteRole = await _context.TourWebsiteRole.FindAsync(id);
+        //    if (tourWebsiteRole == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(tourWebsiteRole);
+        //}
 
-        // POST: Role/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
-        {
-            if (id != tourWebsiteRole.Id)
-            {
-                return NotFound();
-            }
+        //// POST: Role/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Edit(string id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] TourWebsiteRole tourWebsiteRole)
+        //{
+        //    if (id != tourWebsiteRole.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(tourWebsiteRole);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TourWebsiteRoleExists(tourWebsiteRole.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tourWebsiteRole);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(tourWebsiteRole);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!TourWebsiteRoleExists(tourWebsiteRole.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(tourWebsiteRole);
+        //}
 
-        // GET: Role/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Role/Delete/5
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Delete(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var tourWebsiteRole = await _context.TourWebsiteRole
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tourWebsiteRole == null)
-            {
-                return NotFound();
-            }
+        //    var tourWebsiteRole = await _context.TourWebsiteRole
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (tourWebsiteRole == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(tourWebsiteRole);
-        }
+        //    return View(tourWebsiteRole);
+        //}
 
-        // POST: Role/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var tourWebsiteRole = await _context.TourWebsiteRole.FindAsync(id);
-            if (tourWebsiteRole != null)
-            {
-                _context.TourWebsiteRole.Remove(tourWebsiteRole);
-            }
+        //// POST: Role/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> DeleteConfirmed(string id)
+        //{
+        //    var tourWebsiteRole = await _context.TourWebsiteRole.FindAsync(id);
+        //    if (tourWebsiteRole != null)
+        //    {
+        //        _context.TourWebsiteRole.Remove(tourWebsiteRole);
+        //    }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool TourWebsiteRoleExists(string id)
         {
