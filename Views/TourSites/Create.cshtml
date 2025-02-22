@@ -1,4 +1,4 @@
-﻿@model TourWebsite.Models.TourSite
+﻿@model TourWebsite.Models.Tours.TourEdit
 
 @{
     ViewData["Title"] = "Create";
@@ -12,33 +12,52 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="TourID" value="" />
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label name="TourName" class="control-label">Title</label>
+                    <input name="TourName" class="form-control" value="" />
+                    <span asp-validation-for="TourSite.Title" class="text-danger"></span>
+                </div>
+            </table>
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label name="TourDescription" class="control-label">Description</label>
+                    <input name="TourDescription" class="form-control" value="" />
+                    <span asp-validation-for="TourSite.Description" class="text-danger"></span>
+                </div>
+            </table>
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label name="Longitude" class="control-label">Longitude</label>
+                    <input name="Longitude" class="form-control" value="" />
+                    <span asp-validation-for="TourSite.Longitude" class="text-danger"></span>
+                </div>
+            </table>
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label name="Lattitude" class="control-label">Latitude</label>
+                    <input name="Lattitude" class="form-control" value="" />
+                    <span asp-validation-for="TourSite.Lattitude" class="text-danger"></span>
+                </div>
+            </table>
+            <label>Visibility</label>
+            <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
+                <option selected="selected" value="">Select Visibility</option>
+
+            </select>
+
+
+            <table class="table table-bordered table-sm">
+                <div type="email" class="form-group">
+                    <label name="AddEmail" class="control-label">Add editors</label>
+                    <input name="AddEmail" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </table>
+
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Longitude" class="control-label"></label>
-                <input asp-for="Longitude" class="form-control" />
-                <span asp-validation-for="Longitude" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lattitude" class="control-label"></label>
-                <input asp-for="Lattitude" class="form-control" />
-                <span asp-validation-for="Lattitude" class="text-danger"></span>
-            </div>
-            <div type="email" class="form-group">
-                <label name="AddEmail" class="control-label"></label>
-                <input name="AddEmail" class="form-control" />
-                @* <span asp-validation-for="Email" class="text-danger"></span> *@
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

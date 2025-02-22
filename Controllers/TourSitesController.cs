@@ -94,15 +94,51 @@ namespace TourWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Longitude,Lattitude")] TourSite tourSite)
+        public async Task<IActionResult> Create(TourModification tourModification)
         {
-            if (ModelState.IsValid)
+
+            var tourSite = new TourSite() { Title = tourModification.TourName };
+
+
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
+
+            if (!authorized.Succeeded)
             {
-                _context.Add(tourSite);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Redirect(Globals.AccessDeniedPath);
             }
-            return View(tourSite);
+
+            tourSite.Description = tourModification.TourDescription;
+            tourSite.Longitude = tourModification.Longitude;
+            tourSite.Lattitude = tourModification.Lattitude;
+            tourSite.Visibility = tourModification.Visibility;
+
+            List<string> newApprovedEditors = new List<string>();
+            List<string> newApprovedViewers = new List<string>();
+
+
+
+            if (tourModification.AddEmail != null) //Adds editor if email exists
+            {
+                TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmail);
+                if (user1 != null)
+                {
+
+                    newApprovedEditors.Add(user1.Email);
+
+                }
+            }
+
+            tourSite.ApprovedEditUsers = newApprovedEditors;
+            tourSite.ApprovedUsers = newApprovedViewers; //this is set to an empty list
+
+
+
+
+            _context.Add(tourSite);
+            await _context.SaveChangesAsync();
+  
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: TourSites/Edit/5
@@ -321,7 +357,7 @@ namespace TourWebsite.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var tourSite = await _context.TourSites.FindAsync(id);
 
