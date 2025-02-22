@@ -39,7 +39,7 @@ namespace TourWebsite.Controllers
         {
 
 
-            return View(await _context.TourSites.ToListAsync());
+            return View((await _context.TourSites.ToListAsync(), authService));
         }
 
         // GET: TourSites/Details/5

@@ -26,7 +26,7 @@ namespace TourWebsite.Areas.Identity
 
             if (allowedUsers == null)
             {
-                context.Succeed(requirement);
+                context.Fail();
                 return Task.CompletedTask;
             }
 
