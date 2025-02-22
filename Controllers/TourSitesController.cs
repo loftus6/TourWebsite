@@ -196,7 +196,7 @@ namespace TourWebsite.Controllers
             edit.Members = members;
             edit.Viewers = viewers;
 
-            return View(edit);
+            return View((edit,authService)); //pass auth service to this view
         }
 
         // POST: TourSites/Edit/5

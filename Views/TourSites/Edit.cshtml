@@ -1,8 +1,12 @@
-﻿@using TourWebsite.Areas.Identity.Data
-@model TourWebsite.Models.Tours.TourEdit
+﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Areas.Identity.Data
+@model ValueTuple<TourWebsite.Models.Tours.TourEdit,IAuthorizationService>
 
 @{
     ViewData["Title"] = "Edit";
+
+    AuthorizationResult authorized1 = await Model.Item2.AuthorizeAsync(User, null, "TourAccess");
+
 }
 
 <h1>Edit</h1>
@@ -13,60 +17,62 @@
     <div class="col-md-8">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" name="TourID" value="@Model.TourSite.Id" />
+            <input type="hidden" name="TourID" value="@Model.Item1.TourSite.Id" />
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="TourName" class="control-label">Title</label>
-                    <input name="TourName" class="form-control" value="@Model.TourSite.Title" />
-                    <span asp-validation-for="TourSite.Title" class="text-danger"></span>
+                    <input name="TourName" class="form-control" value="@Model.Item1.TourSite.Title" />
+                    <span asp-validation-for="Item1.TourSite.Title" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="TourDescription" class="control-label">Description</label>
-                    <input id="descriptionVal", type="hidden" class="form-control" value="@Model.TourSite.Description" />
+                    <input id="descriptionVal", type="hidden" class="form-control" value="@Model.Item1.TourSite.Description" />
                     <textarea id="tiny" name="TourDescription" class="form-control"></textarea>
-                    <span asp-validation-for="TourSite.Description" class="text-danger"></span>
+                    <span asp-validation-for="Item1.TourSite.Description" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="Longitude" class="control-label">Longitude</label>
-                    <input name="Longitude" class="form-control" value="@Model.TourSite.Longitude" />
-                    <span asp-validation-for="TourSite.Longitude" class="text-danger"></span>
+                    <input name="Longitude" class="form-control" value="@Model.Item1.TourSite.Longitude" />
+                    <span asp-validation-for="Item1.TourSite.Longitude" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="Lattitude" class="control-label">Latitude</label>
-                    <input name="Lattitude" class="form-control" value="@Model.TourSite.Lattitude" />
-                    <span asp-validation-for="TourSite.Lattitude" class="text-danger"></span>
+                    <input name="Lattitude" class="form-control" value="@Model.Item1.TourSite.Lattitude" />
+                    <span asp-validation-for="Item1.TourSite.Lattitude" class="text-danger"></span>
                 </div>
             </table>
+
+            @if(authorized1.Succeeded) {
             <label>Visibility</label>
             <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
-                <option selected="selected" value="@Model.TourSite.Visibility">Currently: @Model.TourSite.Visibility</option>
+                <option selected="selected" value="@Model.Item1.TourSite.Visibility">Currently: @Model.Item1.TourSite.Visibility</option>
 
             </select>
 
-            @if (Model.TourSite.Visibility == VisibilityType.Restricted) {
+            @if (Model.Item1.TourSite.Visibility == VisibilityType.Restricted) {
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
                         <label name="AddEmailViewer" class="control-label">Add Viewers</label>
                         <input name="AddEmailViewer" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="Item1.Email" class="text-danger"></span>
                     </div>
                 </table>
 
-                <label>Remove viewers from @Model.TourSite.Title</label>
+                <label>Remove viewers from @Model.Item1.TourSite.Title</label>
                 <table class="table table-bordered table-sm">
-                    @if (Model.Viewers.Count() == 0)
+                    @if (Model.Item1.Viewers.Count() == 0)
                     {
                         <tr><td colspan="2">No Users Are Viewers</td></tr>
                     }
                     else
                     {
-                        @foreach (TourWebsiteUser user in Model.Viewers)
+                        @foreach (TourWebsiteUser user in Model.Item1.Viewers)
                         {
                             <tr>
                                 <td>@user.UserName</td>
@@ -83,19 +89,19 @@
                 <div type="email" class="form-group">
                     <label name="AddEmail" class="control-label">Add editors</label>
                     <input name="AddEmail" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <span asp-validation-for="Item1.Email" class="text-danger"></span>
                 </div>
             </table>
 
-            <label>Remove editors from @Model.TourSite.Title</label>
+            <label>Remove editors from @Model.Item1.TourSite.Title</label>
             <table class="table table-bordered table-sm">
-                @if (Model.Members.Count() == 0)
+                @if (Model.Item1.Members.Count() == 0)
                 {
                     <tr><td colspan="2">No Users Are Editors</td></tr>
                 }
                 else
                 {
-                    @foreach (TourWebsiteUser user in Model.Members)
+                    @foreach (TourWebsiteUser user in Model.Item1.Members)
                     {
                         <tr>
                             <td>@user.UserName</td>
@@ -106,6 +112,7 @@
                     }
                 }
             </table>
+            }
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
