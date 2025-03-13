@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TourWebsite.Areas.Identity.Data;
 
 
 namespace TourWebsite.Models
@@ -29,6 +30,8 @@ namespace TourWebsite.Models
         public VisibilityType Visibility { get; set; }
         public List<string> ApprovedEditUsers { get; set; }
         public List<string> ApprovedUsers { get; set; }
+
+        public string? ThumbnailID { get; set; }
 
     }
 }

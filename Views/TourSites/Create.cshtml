@@ -10,14 +10,14 @@
 <hr />
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="TourID" value="" />
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="TourName" class="control-label">Title</label>
-                    <input name="TourName" class="form-control" value="" />
-                    <span asp-validation-for="TourSite.Title" class="text-danger"></span>
+                    <label asp-for="Title" class="control-label">Title</label>
+                    <input asp-for="Title" class="form-control" value="" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered">
@@ -29,29 +29,39 @@
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="Longitude" class="control-label">Longitude</label>
-                    <input name="Longitude" class="form-control" value="" />
-                    <span asp-validation-for="TourSite.Longitude" class="text-danger"></span>
+                    <label asp-for="Longitude" class="control-label">Longitude</label>
+                    <input asp-for="Longitude" class="form-control" value="" />
+                    <span asp-validation-for="Longitude" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label name="Lattitude" class="control-label">Latitude</label>
-                    <input name="Lattitude" class="form-control" value="" />
-                    <span asp-validation-for="TourSite.Lattitude" class="text-danger"></span>
+                    <label asp-for="Lattitude" class="control-label">Latitude</label>
+                    <input asp-for="Lattitude" class="form-control" value="" />
+                    <span asp-validation-for="Lattitude" class="text-danger"></span>
                 </div>
             </table>
+
+            <table class="table table-bordered table-sm">
+            <div class="form-group">
+                <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
+                <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
+            </div>
+            </table>
+
+            <table class="table table-bordered table-sm">
             <label>Visibility</label>
             <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
                 <option selected="selected" value="">Select Visibility</option>
 
             </select>
+            </table>
 
 
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
-                    <label name="AddEmail" class="control-label">Add editors</label>
-                    <input name="AddEmail" class="form-control" />
+                    <label asp-for="Email" class="control-label">Add editors</label>
+                    <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </table>

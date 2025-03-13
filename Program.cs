@@ -53,7 +53,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
+builder.Services.AddControllers(
+    options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 builder.Services.AddTransient<IAuthorizationHandler, TourAccessPolicyHandler>();
 builder.Services.AddTransient<IAuthorizationHandler, AdminAccessPolicyHandler>();

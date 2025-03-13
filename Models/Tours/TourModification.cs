@@ -7,7 +7,7 @@ namespace TourWebsite.Models.Tours
     {
 
         public string TourID { get; set; }
-        public string TourName { get; set; }
+        public string Title { get; set; }
         public string TourDescription { get; set; }
         [Range(-180, 180)]
         [Column(TypeName = "decimal(25, 8)")]
@@ -19,14 +19,16 @@ namespace TourWebsite.Models.Tours
         public VisibilityType Visibility { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid Email.")]
-        public string? AddEmail { get; set; }
+        public string? Email { get; set; }
 
         public string[]? DeleteIds { get; set; } //This ID is actually in the form of an email for compatibility with Identity Library
 
 
         [EmailAddress(ErrorMessage = "Invalid Email.")]
-        public string? AddEmailViewer { get; set; }
+        public string? EmailViewer { get; set; }
 
         public string[]? DeleteIdsViewer { get; set; } //Likewise
+
+        public IFormFile? Thumbnail { get; set; }
     }
 }

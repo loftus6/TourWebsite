@@ -56,7 +56,7 @@
             var allowedUsers2 = item.ApprovedEditUsers;
             AuthorizationResult authorized3 = await authService.AuthorizeAsync(User, allowedUsers2, "TourAccess"); //Who can edit this
 
-            if (!authorized2.Succeeded && !authorized3.Succeeded)
+            if ((!authorized2.Succeeded && !authorized3.Succeeded) && item.Visibility != VisibilityType.Public) //Always show public
                 continue;
             <tr>
                 <td>

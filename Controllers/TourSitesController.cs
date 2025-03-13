@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -97,7 +99,7 @@ namespace TourWebsite.Controllers
         public async Task<IActionResult> Create(TourModification tourModification)
         {
 
-            var tourSite = new TourSite() { Title = tourModification.TourName };
+            var tourSite = new TourSite() { Title = tourModification.Title };
 
 
             AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
@@ -117,14 +119,15 @@ namespace TourWebsite.Controllers
 
 
 
-            if (tourModification.AddEmail != null) //Adds editor if email exists
+            if (tourModification.Email != null) //Adds editor if email exists
             {
-                TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmail);
+                TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
                 if (user1 != null)
                 {
 
                     newApprovedEditors.Add(user1.Email);
 
+   
                 }
             }
 
@@ -132,6 +135,34 @@ namespace TourWebsite.Controllers
             tourSite.ApprovedUsers = newApprovedViewers; //this is set to an empty list
 
 
+            var thumb = tourModification.Thumbnail;
+
+
+            if (thumb != null && thumb.Length > 0) //if file is existing
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+
+                    await thumb.CopyToAsync(memoryStream);
+
+                    if (memoryStream.Length < (15 * 1024 * 1024) + 1)
+                    { //max of 15 megabytes
+
+                        var newThumbnail = new UploadedFile()
+                        {
+                            Bytes = memoryStream.ToArray(),
+                            FileName = thumb.FileName,
+                            FileType = Path.GetExtension(thumb.FileName)
+                        };
+
+                        tourSite.ThumbnailID = newThumbnail.Id; //Add reference to id
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "File is to large, must be less than 15 mb");
+                    }
+                }
+            }
 
 
             _context.Add(tourSite);
@@ -196,7 +227,7 @@ namespace TourWebsite.Controllers
             edit.Members = members;
             edit.Viewers = viewers;
 
-            return View((edit,authService)); //pass auth service to this view
+            return View(edit); //pass auth service to this view
         }
 
         // POST: TourSites/Edit/5
@@ -228,7 +259,7 @@ namespace TourWebsite.Controllers
                     return Redirect(Globals.AccessDeniedPath);
                 }
 
-                tourSite.Title = tourModification.TourName;
+                tourSite.Title = tourModification.Title;
                 tourSite.Description = tourModification.TourDescription;
                 tourSite.Longitude = tourModification.Longitude;
                 tourSite.Lattitude = tourModification.Lattitude;
@@ -246,9 +277,9 @@ namespace TourWebsite.Controllers
                 }
 
 
-                if (tourModification.AddEmail != null)
+                if (tourModification.Email != null)
                 {
-                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmail);
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
                     if (user1 != null)
                     {
     
@@ -280,9 +311,9 @@ namespace TourWebsite.Controllers
                 }
 
 
-                if (tourModification.AddEmailViewer != null)
+                if (tourModification.EmailViewer != null)
                 {
-                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.AddEmailViewer);
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.EmailViewer);
                     if (user1 != null)
                     {
 
