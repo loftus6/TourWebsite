@@ -14,6 +14,8 @@ public class TourWebsiteContext : IdentityDbContext<TourWebsiteUser>
 
     public DbSet<TourWebsite.Models.TourSite> TourSites { get; set; } = default!;
 
+    public DbSet<UploadedFile> UploadedFiles { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

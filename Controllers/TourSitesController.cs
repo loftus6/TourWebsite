@@ -155,6 +155,9 @@ namespace TourWebsite.Controllers
                             FileType = Path.GetExtension(thumb.FileName)
                         };
 
+                        _context.Add(newThumbnail);
+
+
                         tourSite.ThumbnailID = newThumbnail.Id; //Add reference to id
                     }
                     else
