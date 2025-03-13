@@ -20,6 +20,12 @@
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </table>
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
+                    <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
+                </div>
+            </table>
             <table class="table table-bordered">
                 <div class="form-group">
                     <label name="TourDescription" class="control-label">Description</label>
@@ -42,12 +48,6 @@
                 </div>
             </table>
 
-            <table class="table table-bordered table-sm">
-            <div class="form-group">
-                <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
-                <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
-            </div>
-            </table>
 
             <table class="table table-bordered table-sm">
             <label>Visibility</label>

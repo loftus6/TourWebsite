@@ -1,8 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using TourWebsite.Areas.Identity.Data
+@using TourWebsite.Data
 @model TourWebsite.Models.Tours.TourEdit
 
 @inject IAuthorizationService auth
+@inject TourWebsiteContext _context
+
 @{
     ViewData["Title"] = "Edit";
 
@@ -16,7 +19,7 @@
 <hr />
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="TourID" value="@Model.TourSite.Id" />
             <table class="table table-bordered table-sm">
@@ -26,6 +29,20 @@
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </table>
+
+            @if (Model.TourSite.ThumbnailID == null)
+            {
+                <table class="table table-bordered table-sm">
+                    <div class="form-group">
+                        <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
+                        <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
+                    </div>
+                </table>
+            }
+            else
+            {
+                
+            }
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="TourDescription" class="control-label">Description</label>

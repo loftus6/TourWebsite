@@ -22,14 +22,18 @@ namespace TourWebsite.Models
                     return;   // DB has been seeded
                 }
 
-                context.TourSites.AddRange(
-                    new TourSite
-                    {
-                        Title = "When Harry Met Sally",
-                        Description = "asdad",
-                        Longitude = 10,
-                        Lattitude = 10,
-                    });
+                //context.TourSites.AddRange(
+                //    new TourSite
+                //    {
+                //        Title = "When Harry Met Sally",
+                //        Description = "asdad",
+                //        Longitude = 10,
+                //        Lattitude = 10,
+                //        ApprovedEditUsers = new List<string>(),
+                //        ApprovedUsers = new List<string>(),
+
+                //    });
+
                 context.SaveChanges();
             }
         }

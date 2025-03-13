@@ -226,6 +226,7 @@ namespace TourWebsite.Controllers
 
 
 
+
             edit.TourSite = tourSite;
             edit.Members = members;
             edit.Viewers = viewers;
@@ -336,6 +337,39 @@ namespace TourWebsite.Controllers
                 }
 
                 tourSite.ApprovedUsers = newApprovedViewers;
+
+
+                var thumb = tourModification.Thumbnail; //adds thumbnail image
+
+
+                if (thumb != null && thumb.Length > 0) //if file is existing
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+
+                        await thumb.CopyToAsync(memoryStream);
+
+                        if (memoryStream.Length < (15 * 1024 * 1024) + 1)
+                        { //max of 15 megabytes
+
+                            var newThumbnail = new UploadedFile()
+                            {
+                                Bytes = memoryStream.ToArray(),
+                                FileName = thumb.FileName,
+                                FileType = Path.GetExtension(thumb.FileName)
+                            };
+
+                            _context.Add(newThumbnail);
+
+
+                            tourSite.ThumbnailID = newThumbnail.Id; //Add reference to id
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("File", "File is to large, must be less than 15 mb");
+                        }
+                    }
+                }
 
 
                 try
