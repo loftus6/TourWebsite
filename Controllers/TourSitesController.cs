@@ -286,14 +286,14 @@ namespace TourWebsite.Controllers
                     TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
                     if (user1 != null)
                     {
-    
+
                         newApprovedUsers.Add(user1.Email);
-  
+
                     }
                 }
 
                 if (tourModification.DeleteIds != null) { //removes users
-            
+
                     foreach (string userId in tourModification.DeleteIds)
                     {
                         newApprovedUsers.Remove(userId);
@@ -371,6 +371,23 @@ namespace TourWebsite.Controllers
                     }
                 }
 
+
+                if (tourModification.RemoveThumbnail) {
+
+                    var thumbId = tourSite.ThumbnailID;
+
+                    if (thumbId != null)
+                    {
+                        var toRemove = _context.UploadedFiles.Find(thumbId);
+
+                        if (toRemove != null)
+                        {
+                            _context.Remove(toRemove);
+
+                            tourSite.ThumbnailID = null;
+                        }
+                    }
+                }
 
                 try
                 {

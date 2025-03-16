@@ -34,5 +34,7 @@ namespace TourWebsite.Models.Tours
         public double Lattitude { get; }
 
         public IFormFile? Thumbnail { get; set; }
+
+        public bool RemoveThumbnail { get; set; }
     }
 }

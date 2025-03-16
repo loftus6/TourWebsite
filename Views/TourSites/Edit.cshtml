@@ -41,7 +41,17 @@
             }
             else
             {
-                
+
+                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.ThumbnailID);
+                if (file != null)
+                {
+                    <label class="control-label h2"></label>
+                    var base64 = Convert.ToBase64String(file.Bytes);
+                    var Image = String.Format("data:image/gif;base64,{0}", base64);
+                    <img src="@Image" alt="" class="img-fluid">
+
+                    <label>Remove Thumbnail: </label><input type="checkbox" asp-for="RemoveThumbnail" />
+                }
             }
             <table class="table table-bordered table-sm">
                 <div class="form-group">
