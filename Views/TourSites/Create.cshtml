@@ -6,9 +6,14 @@
 
 <h1>Create</h1>
 
+@section Map {
+    <div id="viewDiv"></div>
+}
+
 <h4>Tours</h4>
 <hr />
 <div class="row">
+
     <div class="col-md-8">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,14 +41,14 @@
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="Longitude" class="control-label">Longitude</label>
-                    <input asp-for="Longitude" class="form-control" value="" />
+                    <input asp-for="Longitude" id="long" class="form-control" value="" />
                     <span asp-validation-for="Longitude" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="Lattitude" class="control-label">Latitude</label>
-                    <input asp-for="Lattitude" class="form-control" value="" />
+                    <input asp-for="Lattitude" id="lat" class="form-control" value="" />
                     <span asp-validation-for="Lattitude" class="text-danger"></span>
                 </div>
             </table>
@@ -74,8 +79,12 @@
 </div>
 
 <div>
+
+
     <a asp-action="Index">Back to List</a>
 </div>
+
+
 
 <script>
     //Init rich text
@@ -90,6 +99,9 @@
 </script>
 
 
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

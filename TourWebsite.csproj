@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="dymaptic.GeoBlazor.Core" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFilesEx" Version="1.0.0.4" />

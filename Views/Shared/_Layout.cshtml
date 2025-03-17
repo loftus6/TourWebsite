@@ -23,11 +23,6 @@
     <script type="text/javascript" src="~/js/tinymce/tinymce.min.js"> </script>
 
 
-    @* Blazor Map*@
-
-    <link href="_content/dymaptic.GeoBlazor.Core" />
-    <link href="_content/dymaptic.GeoBlazor.Core/assets/esri/themes/light/main.css" rel="stylesheet" />
-
 
 </head>
 <body>
@@ -76,6 +71,27 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Map", required: false)
+
+    <!-- Load Calcite -->
+
+    <script defer type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+
+    <!-- Load the ArcGIS Maps SDK for JavaScript core API -->
+    <link defer rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/dark/main.css" />
+    <script defer src="https://js.arcgis.com/4.32/"></script>
+
+    <!-- Load map components -->
+    <script defer type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+
+    <script defer src="~/js/esrimap.js"></script>
+
+
+    <link defer href="~/css/map.css" rel="stylesheet" />
+
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

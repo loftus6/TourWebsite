@@ -1,4 +1,4 @@
-using dymaptic.GeoBlazor.Core;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TourWebsiteContextConnection") ?? throw new InvalidOperationException("Connection string 'TourWebsiteContextConnection' not found.");;
 
 
-
-builder.Services.AddGeoBlazor(builder.Configuration);
 
 
 builder.Services.AddDbContext<TourWebsiteContext>(options => options.UseSqlServer(connectionString));
