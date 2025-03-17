@@ -1,3 +1,4 @@
+using dymaptic.GeoBlazor.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,15 @@ using TourWebsite.Models;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TourWebsiteContextConnection") ?? throw new InvalidOperationException("Connection string 'TourWebsiteContextConnection' not found.");;
 
+
+
+builder.Services.AddGeoBlazor(builder.Configuration);
+
+
 builder.Services.AddDbContext<TourWebsiteContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<TourWebsiteUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<TourWebsiteRole>().AddEntityFrameworkStores<TourWebsiteContext>();
+
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -93,12 +100,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+//app.MapStaticAssets();
+
+app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+    //.WithStaticAssets();
 
 
 using (var scope = app.Services.CreateScope())

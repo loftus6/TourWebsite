@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Configuration;
 using TourWebsite.Areas;
 using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Areas.Identity.Pages.Account;
