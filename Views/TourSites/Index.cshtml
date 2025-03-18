@@ -1,11 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-@model ValueTuple<List<TourWebsite.Models.TourSite>, IAuthorizationService>
+@model TourWebsite.Models.Tours.CoordPair
+@inject IAuthorizationService auth
 
 @{
     ViewData["Title"] = "Index";
-    var authService = Model.Item2;
 
-    AuthorizationResult authorized1 = await authService.AuthorizeAsync(User, null, "TourAccess");
+
+    AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess");
 
 }
 
@@ -15,10 +16,35 @@
 
 @if (authorized1.Succeeded)
 {
-    <label class="control-label">Longitude</label>
-    <input id="long" class="form-control" value="" />
-    <label class="control-label">Latitude</label>
-    <input id="lat" class="form-control" value="" />
+
+
+    <input type="checkbox" id="addTour" name="addTour" />
+    <label for="addTour">Click to Add</label>
+    <br>
+
+
+     <form asp-action="PassToCreate">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <table class="table table-bordered table-sm">
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label">Longitude</label>
+                <input asp-for="Longitude" id="long" class="form-control" value="" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+        </table>
+        <table class="table table-bordered table-sm">
+            <div class="form-group">
+                <label asp-for="Lattitude" class="control-label">Latitude</label>
+                <input asp-for="Lattitude" id="lat" class="form-control" value="" />
+                <span asp-validation-for="Lattitude" class="text-danger"></span>
+            </div>
+        </table>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
 }
 @section Map {
     <div id="viewDiv"></div>

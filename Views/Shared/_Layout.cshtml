@@ -65,11 +65,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - TourWebsite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -190,8 +185,9 @@
 
                 var longOb = document.getElementById("long");
                 var latOb = document.getElementById("lat")
+                var addBox = document.getElementById("addTour")
 
-                if (typeof (longOb) != 'undefined' && longOb != null) {
+                if (typeof (longOb) != 'undefined' && longOb != null && addBox.checked) {
                     // Get the coordinates of the click on the view
                     var longitude = event.mapPoint.longitude;
                     var latitude = event.mapPoint.latitude;
@@ -224,6 +220,13 @@
 
 
     @await RenderSectionAsync("Scripts", required: false)
+
+
+    @* <footer class="border-top footer text-muted"> *@
+    @*     <div class="container"> *@
+    @*         &copy; 2025 - TourWebsite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+    @*     </div> *@
+    @* </footer> *@
 
 </body>
 </html>

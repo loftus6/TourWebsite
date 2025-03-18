@@ -38,14 +38,14 @@
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="Longitude" class="control-label">Longitude</label>
-                    <input asp-for="Longitude" id="long" class="form-control" value="" />
+                    <input asp-for="Longitude" id="long" class="form-control" value="@Model.Longitude" />
                     <span asp-validation-for="Longitude" class="text-danger"></span>
                 </div>
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="Lattitude" class="control-label">Latitude</label>
-                    <input asp-for="Lattitude" id="lat" class="form-control" value="" />
+                    <input asp-for="Lattitude" id="lat" class="form-control" value="@Model.Lattitude" />
                     <span asp-validation-for="Lattitude" class="text-danger"></span>
                 </div>
             </table>

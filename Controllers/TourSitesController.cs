@@ -40,7 +40,7 @@ namespace TourWebsite.Controllers
         {
 
 
-            return View((await _context.TourSites.ToListAsync(), authService));
+            return View(new CoordPair());
         }
 
         public async Task<IActionResult> ListView()
@@ -90,11 +90,24 @@ namespace TourWebsite.Controllers
         }
 
         // GET: TourSites/Create
+
         [Authorize]
-        public IActionResult Create()
+        public IActionResult PassToCreate(CoordPair pair)
         {
-            return View();
+
+            TourEdit edit = new TourEdit() {
+                Longitude = pair.Longitude,
+                Lattitude = pair.Lattitude
+            };
+
+            return RedirectToAction(nameof(Create), edit);
         }
+        [Authorize]
+        public IActionResult Create(TourEdit edit)
+        {
+            return View(edit);
+        }
+
 
         // POST: TourSites/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

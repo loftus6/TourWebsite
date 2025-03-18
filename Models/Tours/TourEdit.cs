@@ -26,12 +26,12 @@ namespace TourWebsite.Models.Tours
         [Required]
         [Range(-180, 180)]
         [Column(TypeName = "decimal(25, 8)")] //These are just for input validation checking
-        public double Longitude { get; }
+        public double Longitude { get; set; }
 
         [Required]
         [Range(-90, 90)]
         [Column(TypeName = "decimal(25, 8)")]
-        public double Lattitude { get; }
+        public double Lattitude { get; set; }
 
         public IFormFile? Thumbnail { get; set; }
 
