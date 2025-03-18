@@ -43,6 +43,13 @@ namespace TourWebsite.Controllers
             return View((await _context.TourSites.ToListAsync(), authService));
         }
 
+        public async Task<IActionResult> ListView()
+        {
+
+
+            return View((await _context.TourSites.ToListAsync(), authService));
+        }
+
         // GET: TourSites/Details/5
         public async Task<IActionResult> Details(string? id)
         {
