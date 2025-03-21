@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using TourWebsite.Areas;
 using TourWebsite.Areas.Identity.Data;
@@ -40,6 +41,13 @@ namespace TourWebsite.Controllers
         {
 
 
+            return View(new TourId());
+        }
+
+        public async Task<IActionResult> AddNewTour()
+        {
+
+
             return View(new CoordPair());
         }
 
@@ -51,6 +59,24 @@ namespace TourWebsite.Controllers
         }
 
         // GET: TourSites/Details/5
+
+        public async Task<IActionResult> PassToDetails(TourId tourId)
+        {
+
+
+            return await Task.Run<IActionResult>(() =>
+            {
+                if (true)
+                {
+                    return RedirectToAction(nameof(Details), tourId.Id);
+                }
+                else
+                {
+                    return View("Index");
+                }
+            });
+        }
+
         public async Task<IActionResult> Details(string? id)
         {
           
@@ -102,6 +128,7 @@ namespace TourWebsite.Controllers
 
             return RedirectToAction(nameof(Create), edit);
         }
+
         [Authorize]
         public IActionResult Create(TourEdit edit)
         {

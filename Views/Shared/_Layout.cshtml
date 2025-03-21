@@ -98,6 +98,8 @@
 
         var editable = new List<bool>();
 
+        var tourIds = new List<string>();
+
         foreach (var site in toursites)
         {
             longLat.Add([site.Longitude, site.Lattitude]);
@@ -112,6 +114,8 @@
                 visible.Add(true);
             else
                 visible.Add(false);
+
+            tourIds.Add(site.Id);
 
         }
     }
@@ -138,7 +142,9 @@
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [-82.4452, 38.4191,], // longitude, latitude
+                center: [-82.4452, 38.4191,], // longitude, latitude 
+
+                //this is huntington
                 zoom: 18
             });
 
@@ -159,6 +165,7 @@
 
             var existingPoints = JSON.parse("@Json.Serialize(longLat)");
             var pointVisibility = JSON.parse("@Json.Serialize(visible)");
+            var pointIds = @Json.Serialize(tourIds);
 
  
 
@@ -205,35 +212,69 @@
              * address is printed to the popup content.
              *******************************************************************/
             view.popup.autoOpenEnabled = false;
+
+            var longOb = document.getElementById("long");
+            var latOb = document.getElementById("lat")
+
+            var canAdd = document.getElementById("canAddTour")
+            var tourId = document.getElementById("tourId")
+
             view.on("click", function (event) {
 
 
-                var longOb = document.getElementById("long");
-                var latOb = document.getElementById("lat")
-                var addBox = document.getElementById("addTour")
 
-                if (typeof (longOb) != 'undefined' && longOb != null && addBox.checked) {
-                    // Get the coordinates of the click on the view
-                    var longitude = event.mapPoint.longitude;
-                    var latitude = event.mapPoint.latitude;
-                    // Round the coordinates for visualization purposes
-                    var lon = Math.round(longitude * 100000) / 100000;
-                    var lat = Math.round(latitude * 100000) / 100000;
 
-                    console.log(longitude)
-                    console.log(latitude)
+                // Get the coordinates of the click on the view
+                var longitude = event.mapPoint.longitude;
+                var latitude = event.mapPoint.latitude;
 
-                    var point = {
-                        type: "point",
-                        longitude: longitude, // Please make sure to use the unrounded values
-                        latitude: latitude    // otherwise your point will appear in the wrong spot
-                    };
 
-                    pointOnTheMap.geometry = point;
+                // Round the coordinates for visualization purposes
+                var lon = Math.round(longitude * 100000) / 100000;
+                var lat = Math.round(latitude * 100000) / 100000;
+
+
+
+
+                if (typeof (longOb) != 'undefined' && longOb && typeof (canAdd) != 'undefined' && canAdd) {
+
+                var point = {
+                    type: "point",
+                    longitude: longitude, // Please make sure to use the unrounded values
+                    latitude: latitude    // otherwise your point will appear in the wrong spot
+                };
+
+                pointOnTheMap.geometry = point; //draws the point
 
 
                     longOb.value = lon
-                    latOb.value = lat
+                    latOb.value = lat //For create mode, we are setting this coord
+                }
+
+                if (typeof (tourId) != 'undefined' && tourId) {
+
+                    var min = 1000000;
+                    var mindex = 0;
+
+   
+                    for (let i = 0; i < existingPoints.length; i++){
+                        var epoint = existingPoints[i];
+
+                        var a = longitude - epoint[0];
+                        var b = latitude - epoint[1];
+
+                        var c = Math.sqrt( a*a + b*b );
+
+                        if (c < min) {
+
+                            mindex = i;
+                            min=c;
+                        }
+
+
+                    }
+
+                    tourId.value= pointIds[mindex]; //passes the id of the closest object to div
                 }
             });
         });

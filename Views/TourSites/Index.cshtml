@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-@model TourWebsite.Models.Tours.CoordPair
+@model TourWebsite.Models.Tours.TourId
 @inject IAuthorizationService auth
 
 @{
@@ -16,36 +16,41 @@
 
 @if (authorized1.Succeeded)
 {
-
-
-    <input type="checkbox" id="addTour" name="addTour" />
-    <label for="addTour">Click to Add</label>
-    <br>
-
-
-     <form asp-action="PassToCreate">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <table class="table table-bordered table-sm">
-            <div class="form-group">
-                <label asp-for="Longitude" class="control-label">Longitude</label>
-                <input asp-for="Longitude" id="long" class="form-control" value="" />
-                <span asp-validation-for="Longitude" class="text-danger"></span>
-            </div>
-        </table>
-        <table class="table table-bordered table-sm">
-            <div class="form-group">
-                <label asp-for="Lattitude" class="control-label">Latitude</label>
-                <input asp-for="Lattitude" id="lat" class="form-control" value="" />
-                <span asp-validation-for="Lattitude" class="text-danger"></span>
-            </div>
-        </table>
-
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-    </form>
+    <a asp-action="AddNewTour">Add New Tour</a>
 }
+
+<form asp-action="PassToDetails">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <table class="table table-sm" cellpadding="0" cellspacing="0" border="0">
+
+        <thead>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <label asp-for="Id" class="control-label">Id</label>
+                        <input asp-for="Id" id="tourId" class="form-control" value="" />
+                    </div>
+                </td>
+                @* <td> *@
+                @*     <div class="form-group"> *@
+                @*         <label asp-for="Lattitude" class="control-label">Latitude</label> *@
+                @*         <input asp-for="Lattitude" id="lat" class="form-control" value="" /> *@
+                @*         <span asp-validation-for="Lattitude" class="text-danger"></span> *@
+                @*     </div> *@
+                @* </td> *@
+
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+
+                </td>
+            </tr>
+
+        </thead>
+    </table>
+</form>
 @section Map {
     <div id="viewDiv"></div>
 }
