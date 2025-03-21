@@ -1,0 +1,58 @@
+﻿@model TourWebsite.Models.Files.FileEdit
+
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<h1>Create</h1>
+
+
+<h4>Tours</h4>
+<hr />
+<div class="row">
+
+    <div class="col-md-8">
+        <form asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="NewFile" class="control-label">Attach File</label>
+                    <input asp-for="NewFile" class="form-control" type="file">
+                </div>
+            </table>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+
+
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+<script>
+    //Init rich text
+
+           tinymce.init({
+           selector: 'textarea#tiny',
+           license_key: 'gpl',
+               plugins: 'lists',
+    toolbar: 'numlist bullist',
+           promotion: false
+           });
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

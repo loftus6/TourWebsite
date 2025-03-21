@@ -9,7 +9,7 @@ namespace TourWebsite.Areas.Identity.Data
         public UploadedFile()
         {
             Id = Guid.NewGuid().ToString();
-
+            Tags = new List<string>(); //list initialize
         }
 
         public string Id { get; set; }
@@ -20,6 +20,10 @@ namespace TourWebsite.Areas.Identity.Data
         public string FileType { get; set; }
         [Required]
         public string FileName { get; set; }
+        [Required]
+        public bool Embed { get; set; }
+        [Required]
+        public List<string> Tags { get; set; }
 
     }
 }

@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model List<TourWebsite.Areas.Identity.Data.UploadedFile>
+@inject IAuthorizationService authService
+
+@{
+    ViewData["Title"] = "Index";
+
+    AuthorizationResult authorized1 = await authService.AuthorizeAsync(User, null, "TourAccess");
+
+}
+
+<h1>Tours</h1>
+
+
+
+<p>
+
+    @if (authorized1.Succeeded)
+    {
+        <a asp-action="Upload">Upload File</a>
+    }
+
+</p>
+<table class="table">
+    <thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.FileName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.FileType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.Embed)
+                </th>
+
+                <th></th>
+            </tr>
+
+
+            break;
+        }
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+
+
+
+            if (!authorized1.Succeeded) //For now, just for admins
+                continue;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Embed)
+                </td>
+                <td>
+
+
+
+
+                    @if (authorized1.Succeeded){ //If given edit privledges, for now there is only 1 privledge check
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a><b> | </b>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (authorized1.Succeeded) //If you are an admin or editor, you can delete
+                    { //If given edit privledges
+                        <b> | </b><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -8,6 +8,7 @@
 
 @{
     AuthorizationResult authorized = await auth.AuthorizeAsync(User, "AdminAccess");
+    AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess");
 }
 <head>
     <meta charset="utf-8" />
@@ -44,6 +45,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="TourSites" asp-action="Index">Tour Sites</a>
                         </li>
+                        @if (authorized1.Succeeded) //Admins and editors
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index">Files</a>
+                            </li>
+                        }
                         @if (authorized.Succeeded)
                         {
                             <li class="nav-item">
@@ -85,8 +92,6 @@
 
     @{
 
-        AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess"); //If has full access
-
 
 
 
@@ -99,6 +104,8 @@
         var editable = new List<bool>();
 
         var tourIds = new List<string>();
+
+        var placeNames = new List<string>();
 
         foreach (var site in toursites)
         {
@@ -116,6 +123,8 @@
                 visible.Add(false);
 
             tourIds.Add(site.Id);
+
+            placeNames.Add(site.Title);
 
         }
     }
@@ -166,6 +175,7 @@
             var existingPoints = JSON.parse("@Json.Serialize(longLat)");
             var pointVisibility = JSON.parse("@Json.Serialize(visible)");
             var pointIds = @Json.Serialize(tourIds);
+            var placeNames = @Json.Serialize(placeNames);
 
  
 
@@ -218,6 +228,7 @@
 
             var canAdd = document.getElementById("canAddTour")
             var tourId = document.getElementById("tourId")
+            var placeName = document.getElementById("placeName")
 
             view.on("click", function (event) {
 
@@ -274,8 +285,18 @@
 
                     }
 
-                    tourId.value= pointIds[mindex]; //passes the id of the closest object to div
-                }
+
+                    
+
+
+
+                    tourId.setAttribute("href", "/TourSites/Details/"+pointIds[mindex]); //This is a bit hardcoded
+                    tourId.hidden = false;
+
+                    placeName.innerText = placeNames[mindex];
+                    placeName.hidden = false;
+                    }
+                
             });
         });
 

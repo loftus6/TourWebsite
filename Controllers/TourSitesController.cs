@@ -25,7 +25,6 @@ namespace TourWebsite.Controllers
     {
         private readonly TourWebsiteContext _context;
         private IAuthorizationService authService;
-        private IConfiguration config;
         private UserManager<TourWebsiteUser> userManager;
 
         public TourSitesController(TourWebsiteContext context, IAuthorizationService auth, UserManager<TourWebsiteUser> userManager, IConfiguration config)
@@ -33,7 +32,6 @@ namespace TourWebsite.Controllers
             _context = context;
             authService = auth;
             this.userManager = userManager;
-            this.config = config;
         }
 
         // GET: TourSites
