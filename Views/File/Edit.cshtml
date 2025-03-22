@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Areas.Identity.Data
+@using TourWebsite.Data
+@model TourWebsite.Models.Files.FileEdit
+
+@inject IAuthorizationService auth
+@inject TourWebsiteContext _context
+
+@{
+    ViewData["Title"] = "Edit";
+
+    AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess");
+
+}
+
+<h1>Edit</h1>
+
+<h4>Tours</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="FileName" class="control-label">Title</label>
+                    <input asp-for="FileName" class="form-control" value="@Model.FileToEdit.FileName" />
+                    <span asp-validation-for="FileName" class="text-danger"></span>
+                </div>
+            </table>
+
+            <input asp-for="FileToEditId" type="hidden" value="@Model.FileToEdit.Id" />
+
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+
+    var text = document.getElementById('descriptionVal').value;
+        console.log(text);
+
+        tinymce.init({
+
+        selector: 'textarea#tiny',
+        license_key: 'gpl',
+            plugins: 'lists',
+    toolbar: 'numlist bullist',
+        promotion: false,
+            setup: function (editor) {
+              editor.on('init', function (e) {
+                editor.setContent(text);
+              });
+        }
+        });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}

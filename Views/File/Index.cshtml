@@ -9,7 +9,7 @@
 
 }
 
-<h1>Tours</h1>
+<h1>Files</h1>
 
 
 
@@ -17,7 +17,7 @@
 
     @if (authorized1.Succeeded)
     {
-        <a asp-action="Upload">Upload File</a>
+        <a asp-action="UploadSetup">Upload File</a>
     }
 
 </p>
@@ -28,6 +28,9 @@
             <tr>
                 <th>
                     @Html.DisplayNameFor(modelItem => item.FileName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.FileExtension)
                 </th>
                 <th>
                     @Html.DisplayNameFor(modelItem => item.FileType)
@@ -53,6 +56,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileExtension)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FileType)

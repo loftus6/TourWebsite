@@ -7,7 +7,7 @@
 <h1>Create</h1>
 
 
-<h4>Tours</h4>
+<h4>Upload File</h4>
 <hr />
 <div class="row">
 
@@ -15,23 +15,36 @@
         <form asp-action="Upload" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-
-            <label>Use file url </label><input type="checkbox" asp-for="EmbedOrUpload" />
-
             <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="FileName" class="control-label">File Name</label>
+                    <input asp-for="FileName" class="form-control" value="" />
+                    <span asp-validation-for="FileName" class="text-danger"></span>
+                </div>
+            </table>
+            @if (!Model.EmbedOrUpload)
+            {
+                <table class="table table-bordered table-sm">
+                    <div class="form-group">
+                        <label asp-for="NewFile" class="control-label">Attach File</label>
+                        <input asp-for="NewFile" class="form-control" type="file">
+                    </div>
+                </table>
+            }
+            else
+            {
+                <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="EmbedUrl" class="control-label">File Url</label>
                     <input asp-for="EmbedUrl" class="form-control" value="" />
                     <span asp-validation-for="EmbedUrl" class="text-danger"></span>
                 </div>
-            </table>
+                </table>
+            }
 
-            <table class="table table-bordered table-sm">
-                <div class="form-group">
-                    <label asp-for="NewFile" class="control-label">Attach File</label>
-                    <input asp-for="NewFile" class="form-control" type="file">
-                </div>
-            </table>
+            <input hidden type="checkbox" asp-for="EmbedOrUpload" value="@Model.EmbedOrUpload"/>
+
+
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

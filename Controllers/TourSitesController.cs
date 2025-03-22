@@ -196,7 +196,7 @@ namespace TourWebsite.Controllers
                         {
                             Bytes = memoryStream.ToArray(),
                             FileName = thumb.FileName,
-                            FileType = Path.GetExtension(thumb.FileName)
+                            FileExtension = Path.GetExtension(thumb.FileName)
                         };
 
                         _context.Add(newThumbnail);
@@ -400,7 +400,7 @@ namespace TourWebsite.Controllers
                             {
                                 Bytes = memoryStream.ToArray(),
                                 FileName = thumb.FileName,
-                                FileType = Path.GetExtension(thumb.FileName)
+                                FileExtension = Path.GetExtension(thumb.FileName)
                             };
 
                             _context.Add(newThumbnail);

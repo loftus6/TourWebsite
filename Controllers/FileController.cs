@@ -31,9 +31,31 @@ namespace TourWebsite.Controllers
         }
 
         [Authorize]
-        public IActionResult Upload()
+        public IActionResult Upload(FileSetup setup)
         {
-            return View(new FileEdit());
+
+            var fileEdit = new FileEdit();
+
+            fileEdit.FileType = setup.fileType;
+
+            fileEdit.EmbedOrUpload = setup.attachType == AttachType.Linked;
+
+            return View(fileEdit);
+        }
+
+        [Authorize]
+        public IActionResult UploadSetup()
+        {
+            return View(new FileSetup());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult UploadSetup(FileSetup setup)
+        {
+
+            return RedirectToAction(nameof(Upload), setup);
         }
 
         [HttpPost]
@@ -44,15 +66,21 @@ namespace TourWebsite.Controllers
             var newFile = fileEdit.NewFile;
 
 
+            string newName = fileEdit.FileName;
+
+  
+
             if (fileEdit.EmbedOrUpload && fileEdit.EmbedUrl != null)
             {
+
+                newName = newName ?? "Embedded File";
                 var embedFile = new UploadedFile()
                 {
-                    FileName = "Embeded File",
+                    FileName = newName,
                     Embed = true,
                     EmbedUrl = fileEdit.EmbedUrl,
                     Bytes = [],
-                    FileType =  "Embed",
+                    FileExtension = "Embed",
                 };
 
                 _context.Add(embedFile);
@@ -65,6 +93,7 @@ namespace TourWebsite.Controllers
                     using (var memoryStream = new MemoryStream())
                     {
 
+                        newName = newName ?? Path.GetFileNameWithoutExtension(newFile.FileName);
                         await newFile.CopyToAsync(memoryStream);
 
                         if (memoryStream.Length < (15 * 1024 * 1024) + 1)
@@ -73,9 +102,10 @@ namespace TourWebsite.Controllers
                             var addedFile = new UploadedFile()
                             {
                                 Bytes = memoryStream.ToArray(),
-                                FileName = Path.GetFileNameWithoutExtension(newFile.FileName),
-                                FileType = Path.GetExtension(newFile.FileName),
+                                FileName = newName,
+                                FileExtension = Path.GetExtension(newFile.FileName),
                                 Embed = false,
+                                EmbedUrl = ""
                             };
 
                             _context.Add(addedFile);
@@ -131,7 +161,7 @@ namespace TourWebsite.Controllers
             if (file != null)
             {
 
-   
+
                 AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
                 if (!authorized.Succeeded)
                 {
@@ -143,5 +173,130 @@ namespace TourWebsite.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        //Loading the view
+        [Authorize]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var file = await _context.UploadedFiles.FindAsync(id);
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess"); //Maybe make a new access rule 
+
+            if (!authorized.Succeeded)
+            {
+                return Redirect(Globals.AccessDeniedPath);
+            }
+
+            FileEdit edit = new FileEdit();
+
+
+
+
+
+
+
+            edit.FileToEdit = file;
+
+            return View(edit); //pass auth service to this view
+        }
+
+        //Submitting the edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Edit(FileEdit fileEdit)
+        {
+
+            var file = await _context.UploadedFiles.FindAsync(fileEdit.FileToEditId);
+
+            if (file is null)
+            {
+                return NotFound();
+            }
+
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
+
+            if (!authorized.Succeeded)
+            {
+                return Redirect(Globals.AccessDeniedPath);
+            }
+
+
+            //Updates
+            file.FileName = fileEdit.FileName;
+
+
+            //push to db
+            try
+            {
+                _context.Update(file);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FileExists(file.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return await Edit(fileEdit.FileToEditId);
+
+
+        }
+
+
+        public async Task<IActionResult> Details(string? id)
+        {
+
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+
+
+            var file = await _context.UploadedFiles
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess"); //maybe make custom rule
+
+
+            if (!authorized.Succeeded)
+                return Redirect(Globals.AccessDeniedPath);
+
+            return View(file);
+        }
+
+        private bool FileExists(string id)
+        {
+            return _context.UploadedFiles.Any(e => e.Id == id);
+        }
+
     }
+
+
+
+
 }

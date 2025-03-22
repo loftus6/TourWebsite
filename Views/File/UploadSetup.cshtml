@@ -1,0 +1,68 @@
+﻿@using TourWebsite.Models.Files
+@model TourWebsite.Models.Files.FileSetup
+
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<h1>Upload</h1>
+
+
+<h4>Upload File</h4>
+<hr />
+<div class="row">
+
+    <div class="col-md-8">
+        <form asp-action="UploadSetup">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <table class="table table-bordered table-sm">
+                <label>File Type       &nbsp;</label>
+                <select name="fileType" asp-items="Html.GetEnumSelectList<FileType>()">
+                    <option selected="selected" value="">Select File Type</option>
+
+                </select>
+            </table>
+
+            <table class="table table-bordered table-sm">
+                <label>Attachment Type     &nbsp;</label>
+                <select name="attachType" asp-items="Html.GetEnumSelectList<AttachType>()">
+                    <option selected="selected" value="">Select uploaded or linked</option>
+
+                </select>
+            </table>
+
+            <div class="form-group">
+                <input type="submit" value="Continue" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+
+
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+<script>
+    //Init rich text
+
+           tinymce.init({
+           selector: 'textarea#tiny',
+           license_key: 'gpl',
+               plugins: 'lists',
+    toolbar: 'numlist bullist',
+           promotion: false
+           });
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

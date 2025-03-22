@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using TourWebsite.Models.Files;
 
 namespace TourWebsite.Areas.Identity.Data
 {
@@ -16,8 +18,13 @@ namespace TourWebsite.Areas.Identity.Data
 
         public byte[] Bytes { get; set; }
         [Required]
-        public string FileType { get; set; }
+        [DisplayName("Extension")]
+        public string FileExtension { get; set; }
         [Required]
+        [DisplayName("Type")]
+        public FileType FileType { get; set; }
+        [Required]
+        [DisplayName("Name")]
         public string FileName { get; set; }
         [Required]
         public bool Embed { get; set; }
