@@ -131,6 +131,8 @@
 
     @* Map stuff *@
     <script defer>
+
+        
         require([
             //"esri/tasks/Locator",
             "esri/Map",
@@ -307,6 +309,47 @@
 
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script defer>
+
+        //https://www.csharp.com/UploadFile/092589/implementing-modal-pop-up-in-mvc-application/
+
+        $(function () {
+            $(".modalManager").click(function () {
+                debugger;
+                var $buttonClicked = $(this);
+                var ViewUrl = $(this).attr('name');
+
+                var dataId = $buttonClicked.attr('extra-data');
+                console.log(dataId);
+
+                var datahtml = $(dataId).html()
+
+                console.log(datahtml);
+                var extraData = JSON.parse($(dataId).html());
+
+                var options = { "backdrop": "static", keyboard: true };
+
+                $.ajax({
+                    type: "GET",
+                    url: ViewUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: extraData,
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+    </script>
 
 
     @* <footer class="border-top footer text-muted"> *@

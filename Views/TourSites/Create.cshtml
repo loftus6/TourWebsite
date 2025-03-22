@@ -8,6 +8,16 @@
 
 
 <h4>Tours</h4>
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+
 <hr />
 <div class="row">
 
@@ -63,10 +73,23 @@
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
                     <label asp-for="Email" class="control-label">Add editors</label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" id="EmailBox" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </table>
+
+            @* Maybe questionable, but *@
+            @* name is used for the view url *@
+            @* data is used for variables passed to the view, defined in a seperate script so it works *@
+            <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData'>userList</a>
+            <script type="application/json" id="MyScriptData">
+                {
+                "Target": "EmailBox"
+                }
+            </script>
+            @* @Html.ActionLink("User List", "UserList", "Role", new {}, *@
+            @*          new { @class = "modalManager" }) *@
+
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -83,22 +106,25 @@
 
 
 
-<script>
-    //Init rich text
-
-           tinymce.init({
-           selector: 'textarea#tiny',
-           license_key: 'gpl',
-               plugins: 'lists',
-    toolbar: 'numlist bullist',
-           promotion: false
-           });
-</script>
-
 
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        //Init rich text
+
+               tinymce.init({
+               selector: 'textarea#tiny',
+               license_key: 'gpl',
+                   plugins: 'lists',
+        toolbar: 'numlist bullist',
+               promotion: false
+               });
+    </script>
+
+
 }
 

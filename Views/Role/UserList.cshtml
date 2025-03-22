@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model ValueTuple<List<TourWebsite.Areas.Identity.Data.TourWebsiteUser>, string>
+@inject IAuthorizationService authService
+
+@{
+    ViewData["Title"] = "Index";
+
+    AuthorizationResult authorized1 = await authService.AuthorizeAsync(User, null, "TourAccess");
+
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="$('#myModal').modal('hide');">×</button>
+</div>
+
+<h1>Users</h1>
+
+
+<table class="table">
+    <thead>
+        @foreach (var item in Model.Item1)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.Email)
+                </th>
+
+                <th></th>
+            </tr>
+
+
+            break;
+        }
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Item1) {
+
+
+            <tr>
+
+                <td>
+                    <a href="javascript:void(0);"
+                       onclick=
+                       "
+                        emailBox = document.getElementById('@Model.Item2');
+                        if (typeof (emailBox) != 'undefined' && emailBox) {
+                        emailBox.value = `@item.Email`;
+    
+                        }
+
+
+                        "
+
+                       >@Html.DisplayFor(modelItem => item.Email)</a>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+
