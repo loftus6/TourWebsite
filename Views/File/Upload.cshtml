@@ -15,6 +15,17 @@
         <form asp-action="Upload" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+
+            <label>Use file url </label><input type="checkbox" asp-for="EmbedOrUpload" />
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="EmbedUrl" class="control-label">File Url</label>
+                    <input asp-for="EmbedUrl" class="form-control" value="" />
+                    <span asp-validation-for="EmbedUrl" class="text-danger"></span>
+                </div>
+            </table>
+
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="NewFile" class="control-label">Attach File</label>

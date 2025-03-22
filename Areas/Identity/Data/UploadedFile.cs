@@ -14,7 +14,6 @@ namespace TourWebsite.Areas.Identity.Data
 
         public string Id { get; set; }
 
-        [Required]
         public byte[] Bytes { get; set; }
         [Required]
         public string FileType { get; set; }
@@ -22,6 +21,8 @@ namespace TourWebsite.Areas.Identity.Data
         public string FileName { get; set; }
         [Required]
         public bool Embed { get; set; }
+
+        public string EmbedUrl { get; set; }
         [Required]
         public List<string> Tags { get; set; }
 
