@@ -29,7 +29,7 @@ namespace TourWebsite.Models.Tours
 
         public string[]? DeleteIdsViewer { get; set; } //Likewise
 
-        public IFormFile? Thumbnail { get; set; }
+        public string Thumbnail { get; set; }
 
         public bool RemoveThumbnail { get; set; }
     }

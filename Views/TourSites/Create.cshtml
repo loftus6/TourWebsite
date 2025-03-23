@@ -1,4 +1,5 @@
-﻿@model TourWebsite.Models.Tours.TourEdit
+﻿@using TourWebsite.Models.Files
+@model TourWebsite.Models.Tours.TourEdit
 
 @{
     ViewData["Title"] = "Create";
@@ -27,8 +28,16 @@
             </table>
             <table class="table table-bordered table-sm">
                 <div class="form-group">
-                    <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
-                    <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
+                    <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#ThumbnailData'>Pick Thumbnail</a>
+                    <script type="application/json" id="ThumbnailData">
+                        {
+                        "Target": "ThumbnailBox",
+                        "Target2": "ThumbnailPreview",
+                        "FileType": @((ushort)FileType.Image)
+                        }
+                    </script>
+                    <img id="ThumbnailPreview" class="img-fluid" src="" />
+                    <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail">
                 </div>
             </table>
             <table class="table table-bordered">

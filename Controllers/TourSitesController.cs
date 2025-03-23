@@ -183,37 +183,8 @@ namespace TourWebsite.Controllers
             tourSite.ApprovedUsers = newApprovedViewers; //this is set to an empty list
 
 
-            var thumb = tourModification.Thumbnail;
+            tourSite.ThumbnailID = tourModification.Thumbnail;
 
-
-            if (thumb != null && thumb.Length > 0) //if file is existing
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-
-                    await thumb.CopyToAsync(memoryStream);
-
-                    if (memoryStream.Length < (15 * 1024 * 1024) + 1)
-                    { //max of 15 megabytes
-
-                        var newThumbnail = new UploadedFile()
-                        {
-                            Bytes = memoryStream.ToArray(),
-                            FileName = thumb.FileName,
-                            FileExtension = Path.GetExtension(thumb.FileName)
-                        };
-
-                        _context.Add(newThumbnail);
-
-
-                        tourSite.ThumbnailID = newThumbnail.Id; //Add reference to id
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("File", "File is to large, must be less than 15 mb");
-                    }
-                }
-            }
 
 
             _context.Add(tourSite);
@@ -392,51 +363,15 @@ namespace TourWebsite.Controllers
                 var thumb = tourModification.Thumbnail; //adds thumbnail image
 
 
-                if (thumb != null && thumb.Length > 0) //if file is existing
+                if (thumb != null && thumb != "") //if file is existing
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-
-                        await thumb.CopyToAsync(memoryStream);
-
-                        if (memoryStream.Length < (15 * 1024 * 1024) + 1)
-                        { //max of 15 megabytes
-
-                            var newThumbnail = new UploadedFile()
-                            {
-                                Bytes = memoryStream.ToArray(),
-                                FileName = thumb.FileName,
-                                FileExtension = Path.GetExtension(thumb.FileName)
-                            };
-
-                            _context.Add(newThumbnail);
-
-
-                            tourSite.ThumbnailID = newThumbnail.Id; //Add reference to id
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("File", "File is to large, must be less than 15 mb");
-                        }
-                    }
+                    tourSite.ThumbnailID = thumb;
                 }
 
 
                 if (tourModification.RemoveThumbnail) {
 
-                    var thumbId = tourSite.ThumbnailID;
-
-                    if (thumbId != null)
-                    {
-                        var toRemove = _context.UploadedFiles.Find(thumbId);
-
-                        if (toRemove != null)
-                        {
-                            _context.Remove(toRemove);
-
-                            tourSite.ThumbnailID = null;
-                        }
-                    }
+                    tourSite.ThumbnailID = null;
                 }
 
                 try

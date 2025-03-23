@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using TourWebsite.Areas.Identity.Data
 @using TourWebsite.Data
+@using TourWebsite.Models.Files
 @model TourWebsite.Models.Tours.TourEdit
 
 @inject IAuthorizationService auth
@@ -34,24 +35,43 @@
             {
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
-                        <label asp-for="Thumbnail" class="control-label">Thumbnail</label>
-                        <input asp-for="Thumbnail" class="form-control" type="file" name="Thumbnail">
+                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#ThumbnailData'>Pick Thumbnail</a>
+                        <script type="application/json" id="ThumbnailData">
+                            {
+                            "Target": "ThumbnailBox",
+                            "Target2": "ThumbnailPreview",
+                            "FileType": @((ushort)FileType.Image)
+                            }
+                        </script>
+                        <img id="ThumbnailPreview" class="img-fluid" src="" />
+                        <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail">
                     </div>
                 </table>
             }
             else
             {
 
-                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.ThumbnailID);
-                if (file != null)
-                {
-                    <label class="control-label h2"></label>
-                    var base64 = Convert.ToBase64String(file.Bytes);
-                    var Image = String.Format("data:image/gif;base64,{0}", base64);
-                    <img src="@Image" alt="" class="img-fluid">
 
-                    <label>Remove Thumbnail: </label><input type="checkbox" asp-for="RemoveThumbnail" />
-                }
+                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.ThumbnailID);
+
+                    if (file != null)
+                    {
+                        if (file.Embed)
+                        {
+                            <label class="control-label h2"></label>
+                            <img src="@file.EmbedUrl" alt="" class="img-fluid">
+                        }
+                        else if (file.Bytes != null)
+                        {
+                            <label class="control-label h2"></label>
+                            var base64 = Convert.ToBase64String(file.Bytes);
+                            var Image = String.Format("data:image/gif;base64,{0}", base64);
+                            <img src="@Image" alt="" class="img-fluid">
+                        }
+                    }
+                    <label>Remove Thumbnail: </label>
+
+                    <input type="checkbox" asp-for="RemoveThumbnail" />
             }
             <table class="table table-bordered table-sm">
                 <div class="form-group">

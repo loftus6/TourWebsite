@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model ValueTuple<List<TourWebsite.Areas.Identity.Data.UploadedFile>, FileType, string, string>
+@using TourWebsite.Models.Files
+
+@{
+    ViewData["Title"] = "Index";
+
+
+}
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal" aria-hidden="true" onclick="$('#myModal').modal('hide');">×</button>
+    <h2>@Model.Item2</h2>
+</div>
+
+    <p>
+        <label>Name: <input id="fileSearchBox" type="text" name="SearchString" /></label>
+        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalInModal">Search</a>
+    </p>
+
+<table class="table">
+    <thead>
+        @foreach (var item in Model.Item1)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.FileName)
+                </th>
+
+                <th></th>
+            </tr>
+
+
+            break;
+        }
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Item1) {
+
+
+            <tr>
+
+                <td>
+                    <a href="javascript:void(0);"
+                       onclick=
+                       "
+                        emailBox = document.getElementById('@Model.Item3');
+
+                        if (typeof (emailBox) != 'undefined' && emailBox) {
+                            emailBox.value = `@item.Id`;
+                        }
+
+                        preview = document.getElementById('@Model.Item4');
+                        if (typeof (preview) != 'undefined' && preview) {
+
+                            var src = '@(FileStatics.HandleSrc(item))';
+                            preview.src=src;
+                        }   
+                        $('#myModal').modal('hide');
+
+
+                        "
+
+                       >@Html.DisplayFor(modelItem => item.FileName)</a>
+                </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+
+
+        $(function () {
+        $(".modalInModal").click(function () {
+
+
+            var $buttonClicked = $(this);
+            var searchBox = document.getElementById("fileSearchBox");
+
+            var ViewUrl = $(this).attr('name');
+
+            var extraData = {"Target":"@Model.Item3","Target2":"@Model.Item4","searchString":searchBox.value, "fileType":@((ushort)Model.Item2)};
+
+
+            var options = { "backdrop": "static", keyboard: true };
+
+            $.ajax({
+                type: "GET",
+                url: ViewUrl,
+                contentType: "application/json; charset=utf-8",
+                data: extraData,
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+</script>
+

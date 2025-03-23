@@ -289,6 +289,27 @@ namespace TourWebsite.Controllers
             return View(file);
         }
 
+        public async Task<ActionResult> AttachmentList(string Target, string Target2, FileType fileType, string searchString = "")
+        {
+
+
+
+
+
+            var files = from m in _context.UploadedFiles
+                        select m;
+
+
+
+            files = files.Where(s => s.FileType == fileType);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                files = files.Where(s => s.FileName!.ToUpper().Contains(searchString.ToUpper()));
+            }
+            return PartialView((await files.ToListAsync(), fileType, Target, Target2));
+        }
+
         private bool FileExists(string id)
         {
             return _context.UploadedFiles.Any(e => e.Id == id);

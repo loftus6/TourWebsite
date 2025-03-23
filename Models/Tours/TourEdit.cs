@@ -33,7 +33,7 @@ namespace TourWebsite.Models.Tours
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 
-        public IFormFile? Thumbnail { get; set; }
+        public string Thumbnail { get; set; }
 
         public bool RemoveThumbnail { get; set; }
     }

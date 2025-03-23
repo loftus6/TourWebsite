@@ -31,14 +31,23 @@ else {
             {
 
                 var file = await _context.UploadedFiles.FindAsync(Model.Item1.ThumbnailID);
-                if (file != null)
-                {
-                    <label class="control-label h2"></label>
-                    var base64 = Convert.ToBase64String(file.Bytes);
-                    var Image = String.Format("data:image/gif;base64,{0}", base64);
-                    <img src="@Image" alt="" class="img-fluid">
+
+                if (file != null) {
+                    if (file.Embed)
+                    {
+                        <label class="control-label h2"></label>
+                        <img src="@file.EmbedUrl" alt="" class="img-fluid">
+                    }
+                    else if (file.Bytes != null)
+                    {
+                        <label class="control-label h2"></label>
+                        var base64 = Convert.ToBase64String(file.Bytes);
+                        var Image = String.Format("data:image/gif;base64,{0}", base64);
+                        <img src="@Image" alt="" class="img-fluid">
+                    }
                 }
             }
+
         }
     </div>
     <dl class="row">
