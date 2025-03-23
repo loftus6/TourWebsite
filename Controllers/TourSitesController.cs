@@ -324,15 +324,17 @@ namespace TourWebsite.Controllers
                 {
                     foreach (string user in allowedUsers)
                     {
+
+
                         newApprovedUsers.Add(user);
                     }
                 }
 
-
+                
                 if (tourModification.Email != null)
                 {
                     TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
-                    if (user1 != null)
+                    if (user1 != null && !newApprovedUsers.Contains(user1.Email))
                     {
 
                         newApprovedUsers.Add(user1.Email);
@@ -366,7 +368,7 @@ namespace TourWebsite.Controllers
                 if (tourModification.EmailViewer != null)
                 {
                     TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.EmailViewer);
-                    if (user1 != null)
+                    if (user1 != null && !newApprovedViewers.Contains(user1.Email))
                     {
 
                         newApprovedViewers.Add(user1.Email);

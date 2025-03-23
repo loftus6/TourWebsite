@@ -88,7 +88,13 @@
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
                         <label asp-for="EmailViewer" class="control-label">Add Viewers</label>
-                        <input asp-for=EmailViewer class="form-control" />
+                            <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData'>Pick user</a>
+                            <script type="application/json" id="MyScriptData">
+                                {
+                                "Target": "ViewerBox"
+                                }
+                            </script>
+                            <input asp-for=EmailViewer id="ViewerBox" class="form-control" value=""/>
                         <span asp-validation-for="EmailViewer" class="text-danger"></span>
                     </div>
                 </table>
@@ -117,7 +123,13 @@
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
                     <label asp-for="Email" class="control-label">Add editors</label>
-                    <input asp-for="Email" class="form-control" />
+                    <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData2'>Pick user</a>
+                    <script type="application/json" id="MyScriptData2">
+                        {
+                        "Target": "EmailBox"
+                        }
+                    </script>
+                        <input asp-for="Email" id="EmailBox" class="form-control" value="" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </table>

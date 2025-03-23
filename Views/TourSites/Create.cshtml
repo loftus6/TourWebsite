@@ -66,6 +66,12 @@
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
                     <label asp-for="Email" class="control-label">Add editors</label>
+                    <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData'>Pick user</a>
+                    <script type="application/json" id="MyScriptData">
+                        {
+                        "Target": "EmailBox"
+                        }
+                    </script>
                     <input asp-for="Email" id="EmailBox" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
@@ -74,12 +80,6 @@
             @* Maybe questionable, but *@
             @* name is used for the view url *@
             @* data is used for variables passed to the view, defined in a seperate script so it works *@
-            <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData'>userList</a>
-            <script type="application/json" id="MyScriptData">
-                {
-                "Target": "EmailBox"
-                }
-            </script>
             @* @Html.ActionLink("User List", "UserList", "Role", new {}, *@
             @*          new { @class = "modalManager" }) *@
 
