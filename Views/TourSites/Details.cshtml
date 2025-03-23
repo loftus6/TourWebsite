@@ -1,10 +1,14 @@
-﻿@using TourWebsite.Data
+﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Data
 @model ValueTuple<TourWebsite.Models.TourSite, bool>
 
 @inject TourWebsiteContext _context
+@inject IAuthorizationService authService;
 
 @{
     ViewData["Title"] = "Details";
+    var allowedUsers2 = Model.Item1.ApprovedEditUsers;
+    AuthorizationResult authorized3 = await authService.AuthorizeAsync(User, allowedUsers2, "TourAccess"); //Who can edit this
 }
 
 
@@ -65,6 +69,10 @@ else {
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Item1.Id">Edit</a> |
+
+    @if (authorized3.Succeeded)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Item1.Id">Edit</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>
