@@ -246,10 +246,11 @@
 
 
 
-
+                var scale = view.scale;
                 // Get the coordinates of the click on the view
                 var longitude = event.mapPoint.longitude;
                 var latitude = event.mapPoint.latitude;
+
 
 
                 // Round the coordinates for visualization purposes
@@ -277,10 +278,14 @@
                 if (typeof (popUp) != 'undefined' && popUp) {
 
                     var min = 1000000;
-                    var mindex = 0;
+                    var mindex = -1;
 
    
                     for (let i = 0; i < existingPoints.length; i++){
+
+
+                        if (!pointVisibility[i])
+                            continue;
                         var epoint = existingPoints[i];
 
                         var a = longitude - epoint[0];
@@ -295,15 +300,24 @@
                         }
 
 
+
                     }
 
 
-                    popUpScript.textContent = '{"id":\"'+pointIds[mindex]+'\", "partial":true}';
+                    console.log("percent");
 
-                    console.log(popUpScript.textContent);
+                    var relScale = (min/scale)*1000000000
+                    console.log(relScale);
 
-                    popUp.click();
+                    if (mindex > -1 && relScale < 20) {
+
+                        popUpScript.textContent = '{"id":\"'+pointIds[mindex]+'\", "partial":true}';
+
+                        console.log(popUpScript.textContent);
+
+                        popUp.click();
                     }
+                }
                 
             });
         });
