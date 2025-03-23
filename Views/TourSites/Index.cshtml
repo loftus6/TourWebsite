@@ -11,6 +11,9 @@
 }
 
 <h1>Tours</h1>
+
+
+
 <a asp-action="ListView">List View</a>        
 <br />
 <b>Click on a site to learn more </b>
@@ -27,5 +30,12 @@
 
 
 @section Map {
+
+    <a hidden href="javascript:void(0);" name="/TourSites/Details" class="modalManager" id="mapPopUp" extra-data='#MyScriptData'></a>
+    <script type="application/json" id="MyScriptData">
+        {
+        "Target": "EmailBox"
+        }
+    </script>
     <div id="viewDiv"></div>
 }

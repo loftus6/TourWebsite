@@ -72,6 +72,15 @@
         </main>
     </div>
 
+
+    <div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -229,8 +238,9 @@
             var latOb = document.getElementById("lat")
 
             var canAdd = document.getElementById("canAddTour")
-            var tourId = document.getElementById("tourId")
-            var placeName = document.getElementById("placeName")
+
+            var popUp = document.getElementById("mapPopUp");
+            var popUpScript = document.getElementById("MyScriptData");
 
             view.on("click", function (event) {
 
@@ -264,7 +274,7 @@
                     latOb.value = lat //For create mode, we are setting this coord
                 }
 
-                if (typeof (tourId) != 'undefined' && tourId) {
+                if (typeof (popUp) != 'undefined' && popUp) {
 
                     var min = 1000000;
                     var mindex = 0;
@@ -288,15 +298,11 @@
                     }
 
 
-                    
+                    popUpScript.textContent = '{"id":\"'+pointIds[mindex]+'\", "partial":true}';
 
+                    console.log(popUpScript.textContent);
 
-
-                    tourId.setAttribute("href", "/TourSites/Details/"+pointIds[mindex]); //This is a bit hardcoded
-                    tourId.hidden = false;
-
-                    placeName.innerText = placeNames[mindex];
-                    placeName.hidden = false;
+                    popUp.click();
                     }
                 
             });

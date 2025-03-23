@@ -75,7 +75,7 @@ namespace TourWebsite.Controllers
             });
         }
 
-        public async Task<IActionResult> Details(string? id)
+        public async Task<IActionResult> Details(string? id, bool partial=false)
         {
           
 
@@ -110,7 +110,11 @@ namespace TourWebsite.Controllers
                     return Redirect(Globals.AccessDeniedPath);
             }
 
-            return View(tourSite);
+            if (partial)
+            {
+                return PartialView((tourSite,partial));
+            }
+            return View((tourSite,partial));
         }
 
         // GET: TourSites/Create
