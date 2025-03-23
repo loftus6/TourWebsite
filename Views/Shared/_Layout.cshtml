@@ -334,7 +334,8 @@
 
         $(function () {
             $(".modalManager").click(function () {
-                debugger;
+
+                console.log("modal clicked");
                 var $buttonClicked = $(this);
                 var ViewUrl = $(this).attr('name');
 
@@ -355,7 +356,6 @@
                     data: extraData,
                     datatype: "json",
                     success: function (data) {
-                        debugger;
                         $('#myModalContent').html(data);
                         $('#myModal').modal(options);
                         $('#myModal').modal('show');

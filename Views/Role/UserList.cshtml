@@ -14,7 +14,10 @@
     <h2>Users</h2>
 </div>
 
-
+    <p>
+        <label>Title: <input id="userSearchBox" type="text" name="SearchString" /></label>
+        <a href="javascript:void(0);" name="/Role/UserList" class="modalInModal">Search</a>
+    </p>
 
 <table class="table">
     <thead>
@@ -58,4 +61,43 @@
 }
     </tbody>
 </table>
+
+
+<script>
+
+
+        $(function () {
+        $(".modalInModal").click(function () {
+
+            console.log("modal clicked");
+            var $buttonClicked = $(this);
+            var searchBox = document.getElementById("userSearchBox");
+            console.log(searchBox)
+            var ViewUrl = $(this).attr('name');
+
+            var extraData = {"Target":"@Model.Item2","searchString":searchBox.value};
+
+            console.log(extraData);
+
+            var options = { "backdrop": "static", keyboard: true };
+
+            $.ajax({
+                type: "GET",
+                url: ViewUrl,
+                contentType: "application/json; charset=utf-8",
+                data: extraData,
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+</script>
 

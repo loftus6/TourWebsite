@@ -57,9 +57,17 @@ namespace TourWebsite.Controllers
             return View(tourWebsiteRole);
         }
 
-        public async Task<ActionResult> UserList(string Target)
+        public async Task<ActionResult> UserList(string Target, string searchString = "")
         {
-            return PartialView((await _context.Users.ToListAsync(), Target));
+
+            var users = from m in _context.Users
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(s => s.Email!.ToUpper().Contains(searchString.ToUpper()));
+            }
+            return PartialView((await users.ToListAsync(), Target));
         }
 
         private bool TourWebsiteRoleExists(string id)
