@@ -123,17 +123,18 @@ namespace TourWebsite.Controllers
         public IActionResult PassToCreate(CoordPair pair)
         {
 
-            TourEdit edit = new TourEdit() {
-                Longitude = pair.Longitude,
-                Lattitude = pair.Lattitude
-            };
 
-            return RedirectToAction(nameof(Create), edit);
+            return RedirectToAction(nameof(Create), pair);
         }
 
         [Authorize]
-        public IActionResult Create(TourEdit edit)
+        public IActionResult Create(CoordPair pair)
         {
+            TourEdit edit = new TourEdit()
+            {
+                Longitude = pair.Longitude,
+                Lattitude = pair.Lattitude
+            };
             return View(edit);
         }
 
@@ -144,53 +145,63 @@ namespace TourWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create(TourModification tourModification)
+        public async Task<IActionResult> Create(TourEdit tourModification)
         {
 
-            var tourSite = new TourSite() { Title = tourModification.Title };
-
-
-            AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
-
-            if (!authorized.Succeeded)
+            if (ModelState.IsValid)
             {
-                return Redirect(Globals.AccessDeniedPath);
-            }
-
-            tourSite.Description = tourModification.TourDescription;
-            tourSite.Longitude = tourModification.Longitude;
-            tourSite.Lattitude = tourModification.Lattitude;
-            tourSite.Visibility = tourModification.Visibility;
-
-            List<string> newApprovedEditors = new List<string>();
-            List<string> newApprovedViewers = new List<string>();
+                var tourSite = new TourSite() { Title = tourModification.Title };
 
 
+                AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess");
 
-            if (tourModification.Email != null) //Adds editor if email exists
-            {
-                TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
-                if (user1 != null)
+                if (!authorized.Succeeded)
                 {
-
-                    newApprovedEditors.Add(user1.Email);
-
-   
+                    return Redirect(Globals.AccessDeniedPath);
                 }
+
+                tourSite.Description = tourModification.TourDescription;
+                tourSite.Longitude = tourModification.Longitude;
+                tourSite.Lattitude = tourModification.Lattitude;
+                tourSite.Visibility = tourModification.Visibility;
+
+
+                List<string> newApprovedEditors = new List<string>();
+                List<string> newApprovedViewers = new List<string>();
+
+
+
+                if (tourModification.Email != null) //Adds editor if email exists
+                {
+                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
+                    if (user1 != null)
+                    {
+
+                        newApprovedEditors.Add(user1.Email);
+
+
+                    }
+                }
+
+                tourSite.ApprovedEditUsers = newApprovedEditors;
+                tourSite.ApprovedUsers = newApprovedViewers; //this is set to an empty list
+
+
+                tourSite.ThumbnailID = tourModification.Thumbnail;
+                tourSite.AudioID = tourModification.AudioTrack;
+
+
+
+                _context.Add(tourSite);
+                await _context.SaveChangesAsync();
+
+
+                return RedirectToAction(nameof(Index));
             }
-
-            tourSite.ApprovedEditUsers = newApprovedEditors;
-            tourSite.ApprovedUsers = newApprovedViewers; //this is set to an empty list
-
-
-            tourSite.ThumbnailID = tourModification.Thumbnail;
-
-
-
-            _context.Add(tourSite);
-            await _context.SaveChangesAsync();
-  
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                return View(tourModification);
+            }
 
         }
 
@@ -259,12 +270,12 @@ namespace TourWebsite.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(TourModification tourModification)
+        public async Task<IActionResult> Edit(TourEdit tourModification)
         {
 
 
 
-            if (ModelState.IsValid || true) //This model is invalid for some reason, but it seems to work
+            if (ModelState.IsValid) 
             {
                 var tourSite = await _context.TourSites.FindAsync(tourModification.TourID);
 
@@ -361,6 +372,7 @@ namespace TourWebsite.Controllers
 
 
                 var thumb = tourModification.Thumbnail; //adds thumbnail image
+                var audio = tourModification.AudioTrack;
 
 
                 if (thumb != null && thumb != "") //if file is existing
@@ -372,6 +384,18 @@ namespace TourWebsite.Controllers
                 if (tourModification.RemoveThumbnail) {
 
                     tourSite.ThumbnailID = null;
+                }
+
+                if (audio != null && audio != "") //if file is existing
+                {
+                    tourSite.AudioID = audio;
+                }
+
+
+                if (tourModification.RemoveAudio)
+                {
+
+                    tourSite.AudioID = null;
                 }
 
                 try

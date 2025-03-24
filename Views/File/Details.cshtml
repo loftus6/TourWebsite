@@ -14,22 +14,7 @@
     <hr />
     <div class="form-group col-4">
         @{
-            if (Model.FileType == FileType.Image)
-            {
-
-                if (Model.Embed)
-                {
-                    <label class="control-label h2"></label>
-                    <img src="@Model.EmbedUrl" alt="" class="img-fluid">
-                }
-                else if (Model.Bytes != null)
-                {
-                    <label class="control-label h2"></label>
-                    var base64 = Convert.ToBase64String(Model.Bytes);
-                    var Image = String.Format("data:image/gif;base64,{0}", base64);
-                    <img src="@Image" alt="" class="img-fluid">
-                }
-            }
+            @Html.Raw(Model.HtmlString());
         }
     </div>
     <dl class="row">

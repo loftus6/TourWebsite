@@ -33,5 +33,7 @@ namespace TourWebsite.Models
 
         public string? ThumbnailID { get; set; }
 
+        public string? AudioID { get; set; }
+
     }
 }

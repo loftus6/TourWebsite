@@ -21,7 +21,7 @@ namespace TourWebsite.Models.Tours
         public string? EmailViewer { get; set; }
 
         [Required]
-        public string Title { get; }
+        public string Title { get; set; }
 
         [Required]
         [Range(-180, 180)]
@@ -35,6 +35,19 @@ namespace TourWebsite.Models.Tours
 
         public string Thumbnail { get; set; }
 
+        public string AudioTrack { get; set; }
+
         public bool RemoveThumbnail { get; set; }
+        public bool RemoveAudio { get; set; }
+
+
+        //For editing
+        public string TourID { get; set; }
+        public string TourDescription { get; set; }
+        public VisibilityType Visibility { get; set; }
+
+        public string[]? DeleteIds { get; set; } //This ID is actually in the form of an email for compatibility with Identity Library
+
+        public string[]? DeleteIdsViewer { get; set; } //Likewise
     }
 }

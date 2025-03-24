@@ -17,7 +17,7 @@
 
     <div class="col-md-8">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="text-danger"></div>
             <input type="hidden" name="TourID" value="" />
             <table class="table table-bordered table-sm">
                 <div class="form-group">
@@ -36,8 +36,23 @@
                         "FileType": @((ushort)FileType.Image)
                         }
                     </script>
-                    <img id="ThumbnailPreview" class="img-fluid" src="" />
                     <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail">
+                    <div id="ThumbnailPreview"></div>
+                </div>
+            </table>
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#AudioData'>Pick Audio Track</a>
+                    <script type="application/json" id="AudioData">
+                        {
+                        "Target": "AudioBox",
+                        "Target2": "AudioPreview",
+                        "FileType": @((ushort)FileType.Audio)
+                        }
+                    </script>
+                    <input hidden asp-for="AudioTrack" class="form-control" id="AudioBox" name="AudioTrack">
+                    <div id="AudioPreview" ></div>
                 </div>
             </table>
             <table class="table table-bordered">

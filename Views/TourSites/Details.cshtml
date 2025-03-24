@@ -9,6 +9,7 @@
     ViewData["Title"] = "Details";
     var allowedUsers2 = Model.Item1.ApprovedEditUsers;
     AuthorizationResult authorized3 = await authService.AuthorizeAsync(User, allowedUsers2, "TourAccess"); //Who can edit this
+    AuthorizationResult authorized = await authService.AuthorizeAsync(User, null, "TourAccess"); //Who can delete this
 }
 
 
@@ -33,18 +34,7 @@ else {
                 var file = await _context.UploadedFiles.FindAsync(Model.Item1.ThumbnailID);
 
                 if (file != null) {
-                    if (file.Embed)
-                    {
-                        <label class="control-label h2"></label>
-                        <img src="@file.EmbedUrl" alt="" class="img-fluid">
-                    }
-                    else if (file.Bytes != null)
-                    {
-                        <label class="control-label h2"></label>
-                        var base64 = Convert.ToBase64String(file.Bytes);
-                        var Image = String.Format("data:image/gif;base64,{0}", base64);
-                        <img src="@Image" alt="" class="img-fluid">
-                    }
+                    @Html.Raw(file.HtmlString());
                 }
             }
 
@@ -60,9 +50,11 @@ else {
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Item1.Description)
         </dt>
+        <br />
         <dd class = "col-sm-10">
             @Html.Raw(Model.Item1.Description)
         </dd>
+        <br />
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Item1.Longitude)
         </dt>
@@ -82,6 +74,10 @@ else {
     @if (authorized3.Succeeded)
     {
         <a asp-action="Edit" asp-route-id="@Model.Item1.Id">Edit</a>
+    }
+    @if (authorized.Succeeded)
+    {
+        <a asp-action="Delete" asp-route-id="@Model.Item1.Id">Delete</a>
     }
     <a asp-action="Index">Back to List</a>
 </div>

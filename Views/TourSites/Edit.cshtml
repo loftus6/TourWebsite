@@ -43,8 +43,8 @@
                             "FileType": @((ushort)FileType.Image)
                             }
                         </script>
-                        <img id="ThumbnailPreview" class="img-fluid" src="" />
                         <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail">
+                        <div id="ThumbnailPreview"></div>
                     </div>
                 </table>
             }
@@ -54,24 +54,49 @@
 
                 var file = await _context.UploadedFiles.FindAsync(Model.TourSite.ThumbnailID);
 
-                    if (file != null)
-                    {
-                        if (file.Embed)
-                        {
-                            <label class="control-label h2"></label>
-                            <img src="@file.EmbedUrl" alt="" class="img-fluid">
-                        }
-                        else if (file.Bytes != null)
-                        {
-                            <label class="control-label h2"></label>
-                            var base64 = Convert.ToBase64String(file.Bytes);
-                            var Image = String.Format("data:image/gif;base64,{0}", base64);
-                            <img src="@Image" alt="" class="img-fluid">
-                        }
-                    }
-                    <label>Remove Thumbnail: </label>
+                if (file != null)
+                {
+                    @Html.Raw(file.HtmlString())
+                }
+                <br />
+                <label>Remove Thumbnail: </label>
 
-                    <input type="checkbox" asp-for="RemoveThumbnail" />
+
+                <input type="checkbox" asp-for="RemoveThumbnail" />
+                <br />
+                
+            }
+
+            @if (Model.TourSite.AudioID == null)
+            {
+                <table class="table table-bordered table-sm">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#AudioData'>Pick Audio Track</a>
+                        <script type="application/json" id="AudioData">
+                            {
+                            "Target": "AudioBox",
+                            "Target2": "AudioPreview",
+                            "FileType": @((ushort)FileType.Audio)
+                            }
+                        </script>
+                        <input hidden asp-for="AudioTrack" class="form-control" id="AudioBox" name="AudioTrack">
+                        <div id="AudioPreview"></div>
+                    </div>
+                </table>
+            }
+            else
+            {
+                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.AudioID);
+
+                if (file != null)
+                {
+                    @Html.Raw(file.HtmlString())
+                }
+                <br />
+                <label>Remove Audio: </label>
+
+                <input type="checkbox" asp-for="RemoveAudio" />
+                <br />
             }
             <table class="table table-bordered table-sm">
                 <div class="form-group">

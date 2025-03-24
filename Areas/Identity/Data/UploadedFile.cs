@@ -33,5 +33,42 @@ namespace TourWebsite.Areas.Identity.Data
         [Required]
         public List<string> Tags { get; set; }
 
+        public string HandleSrc()
+        {
+            var file = this;
+
+            if (file.Embed)
+            {
+                return file.EmbedUrl;
+            }
+            if (file.FileType == FileType.Image)
+            {
+                var ret = String.Format("data:image/gif;base64,{0}", Convert.ToBase64String(file.Bytes));
+                return ret;
+            }
+            if (file.FileType == FileType.Audio)
+            {
+                var ret = String.Format("data:audio/mpeg;base64,{0}", Convert.ToBase64String(file.Bytes));
+                return ret;
+            }
+
+            return "";
+        }
+
+        public string HtmlString()
+        {
+            var file = this;
+            var src = HandleSrc();
+            if (file.FileType == FileType.Image)
+            {
+                return "<img src=\"" + src + "\"alt=\"\" class=\"img-fluid\">";
+            }
+            if (file.FileType == FileType.Audio)
+            {
+                return "<audio controls autoplay> <source src=\""+src+"\"type=\"audio/mpeg\">Your browser does not support the audio element.</audio>";
+            }
+            return "";
+        }
+
     }
 }

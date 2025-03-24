@@ -53,8 +53,8 @@
                         preview = document.getElementById('@Model.Item4');
                         if (typeof (preview) != 'undefined' && preview) {
 
-                            var src = '@(FileStatics.HandleSrc(item))';
-                            preview.src=src;
+                            var src = '@(item.HtmlString())';
+                            preview.innerHTML=src;
                         }   
                         $('#myModal').modal('hide');
 

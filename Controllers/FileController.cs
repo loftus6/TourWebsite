@@ -79,6 +79,7 @@ namespace TourWebsite.Controllers
                     FileName = newName,
                     Embed = true,
                     EmbedUrl = fileEdit.EmbedUrl,
+                    FileType=fileEdit.FileType,
                     Bytes = [],
                     FileExtension = "Embed",
                 };
@@ -104,6 +105,7 @@ namespace TourWebsite.Controllers
                                 Bytes = memoryStream.ToArray(),
                                 FileName = newName,
                                 FileExtension = Path.GetExtension(newFile.FileName),
+                                FileType=fileEdit.FileType,
                                 Embed = false,
                                 EmbedUrl = ""
                             };
