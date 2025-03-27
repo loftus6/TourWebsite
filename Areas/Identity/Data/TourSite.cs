@@ -36,6 +36,7 @@ namespace TourWebsite.Models
         public string? AudioID { get; set; }
 
         public string IconColor { get; set; }
+        public string IconBorderColor { get; set; }
 
     }
 }

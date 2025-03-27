@@ -38,6 +38,7 @@ namespace TourWebsite.Models.Tours
         public string AudioTrack { get; set; }
 
         public string IconColor { get; set; }
+        public string IconBorderColor { get; set; }
 
 
         //For editing

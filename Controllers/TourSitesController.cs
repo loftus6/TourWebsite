@@ -133,7 +133,9 @@ namespace TourWebsite.Controllers
             TourEdit edit = new TourEdit()
             {
                 Longitude = pair.Longitude,
-                Lattitude = pair.Lattitude
+                Lattitude = pair.Lattitude,
+                IconColor = "#E27728",
+                IconBorderColor = "#FFFFFF",
             };
             return View(edit);
         }
@@ -191,6 +193,7 @@ namespace TourWebsite.Controllers
                 tourSite.AudioID = tourModification.AudioTrack;
 
                 tourSite.IconColor = tourModification.IconColor;
+                tourSite.IconBorderColor = tourModification.IconBorderColor;
 
 
 
@@ -302,6 +305,7 @@ namespace TourWebsite.Controllers
                 tourSite.Visibility = tourModification.Visibility;
 
                 tourSite.IconColor = tourModification.IconColor;
+                tourSite.IconBorderColor = tourModification.IconBorderColor;
 
                 List<string> newApprovedUsers = new List<string>();
                 List<string> newApprovedViewers = new List<string>();

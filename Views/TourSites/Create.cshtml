@@ -15,7 +15,7 @@
 <hr />
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-12">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div class="text-danger"></div>
             <input type="hidden" name="TourID" value="" />
@@ -36,7 +36,7 @@
                         "FileType": @((ushort)FileType.Image)
                         }
                     </script>
-                    <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail">
+                    <input hidden asp-for="Thumbnail" class="form-control" id="ThumbnailBox" name="Thumbnail" value="@Model.Thumbnail">
                     <div id="ThumbnailPreview"></div>
                 </div>
             </table>
@@ -51,39 +51,54 @@
                         "FileType": @((ushort)FileType.Audio)
                         }
                     </script>
-                    <input hidden asp-for="AudioTrack" class="form-control" id="AudioBox" name="AudioTrack">
+                    <input hidden asp-for="AudioTrack" class="form-control" id="AudioBox" name="AudioTrack" value="@Model.AudioTrack">
                     <div id="AudioPreview" ></div>
                 </div>
             </table>
             <table class="table table-bordered">
                 <div class="form-group">
                     <label name="TourDescription" class="control-label">Description</label>
-                    <textarea id="tiny" name="TourDescription" class="form-control" value=""></textarea>
+                    <textarea id="tiny" name="TourDescription" class="form-control" value="@Model.TourDescription"></textarea>
                     <span asp-validation-for="TourSite.Description" class="text-danger"></span>
                 </div>
             </table>
-            <table class="table table-bordered table-sm">
-                <div class="form-group">
-                    <label asp-for="Longitude" class="control-label">Longitude</label>
-                    <input asp-for="Longitude" id="long" class="form-control" value="@Model.Longitude" />
-                    <span asp-validation-for="Longitude" class="text-danger"></span>
-                </div>
-            </table>
-            <table class="table table-bordered table-sm">
-                <div class="form-group">
-                    <label asp-for="Lattitude" class="control-label">Latitude</label>
-                    <input asp-for="Lattitude" id="lat" class="form-control" value="@Model.Lattitude" />
-                    <span asp-validation-for="Lattitude" class="text-danger"></span>
-                </div>
+
+            <table class="table table-sm" cellpadding="0" cellspacing="0" border="0">
+
+                <thead class="form-group">
+                    <tr>
+                        <td class="col-sm-2">
+                            <label asp-for="Longitude" class="control-label">Longitude</label>
+                            <input asp-for="Longitude" id="long" class="form-control" value="@Model.Longitude" />
+                            <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </td>
+                        <td class="col-sm-2">
+                            <label asp-for="Lattitude" class="control-label">Latitude</label>
+                            <input asp-for="Lattitude" id="lat" class="form-control" value="@Model.Lattitude" />
+                            <span asp-validation-for="Lattitude" class="text-danger"></span>
+                        </td>
+                    <tr />
+                </thead>
             </table>
 
-            <table class="table table-bordered table-sm">
-                <div class="form-group">
+            <table class="table table-sm" cellpadding="0" cellspacing="0" border="0" >
+
+                <thead class="form-group">
+                    <tr>
+                    <td class="col-sm-2">
                     <label asp-for="IconColor" class="control-label">Icon Color</label>
                     <input asp-for="IconColor" type="color" class="form-control" value="@Model.IconColor" />
-                    <span asp-validation-for="Lattitude" class="text-danger"></span>
-                </div>
+                    <span asp-validation-for="IconColor" class="text-danger"></span>
+                    </td>
+                    <td class="col-sm-2">
+                        <label asp-for="IconBorderColor" class="control-label">Icon Border Color</label>
+                        <input asp-for="IconBorderColor" type="color" class="form-control" value="@Model.IconBorderColor" />
+                        <span asp-validation-for="IconColor" class="text-danger"></span>
+                    </td>
+                    <tr />
+                </thead>
             </table>
+
 
 
             <table class="table table-bordered table-sm">

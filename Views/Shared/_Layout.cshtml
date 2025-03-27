@@ -118,6 +118,9 @@
 
         var colors = new List<string>();
 
+        var iconColors = new List<string>();
+
+
         foreach (var site in toursites)
         {
             longLat.Add([site.Longitude, site.Lattitude]);
@@ -133,11 +136,18 @@
             }
             else
             {
-                colors.Add("\\#000000");
+                colors.Add("#000000");
             }
 
-            //TODO ADD CHECK FOR NULL COLOR
+            if (site.IconBorderColor != null && site.IconBorderColor != "")
+            {
+                iconColors.Add(site.IconBorderColor);
 
+            }
+            else
+            {
+                iconColors.Add("#ffffff");
+            }
             var allowedUsers1 = site.ApprovedUsers;
             AuthorizationResult authorized2 = await auth.AuthorizeAsync(User, allowedUsers1, "TourAccess"); //Who can view this
 
@@ -207,6 +217,8 @@
             var pointIds = @Json.Serialize(tourIds);
             var placeNames = @Json.Serialize(placeNames);
             var colors = @Json.Serialize(colors);
+            var iconColors =  @Json.Serialize(iconColors);
+
 
  
 
@@ -223,7 +235,7 @@
                 type: "simple-marker",
                 color: colors[i], 
                 outline: {
-                    color: [255, 255, 255], // white
+                    color: iconColors[i], // white
                     width: 1
                 }
             };
