@@ -37,11 +37,13 @@ namespace TourWebsite.Models.Tours
 
         public string AudioTrack { get; set; }
 
-        public bool RemoveThumbnail { get; set; }
-        public bool RemoveAudio { get; set; }
+        public string IconColor { get; set; }
 
 
         //For editing
+        public bool RemoveThumbnail { get; set; }
+        public bool RemoveAudio { get; set; }
+
         public string TourID { get; set; }
         public string TourDescription { get; set; }
         public VisibilityType Visibility { get; set; }

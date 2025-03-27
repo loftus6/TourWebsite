@@ -74,12 +74,12 @@
 
 
     <div id='myModal' class='modal'>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div id='myModalContent'></div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'></div>
+            </div>
         </div>
     </div>
-</div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -116,9 +116,27 @@
 
         var placeNames = new List<string>();
 
+        var colors = new List<string>();
+
         foreach (var site in toursites)
         {
             longLat.Add([site.Longitude, site.Lattitude]);
+
+
+
+
+
+            if (site.IconColor != null && site.IconColor != "")
+            {
+                colors.Add(site.IconColor);
+
+            }
+            else
+            {
+                colors.Add("\\#000000");
+            }
+
+            //TODO ADD CHECK FOR NULL COLOR
 
             var allowedUsers1 = site.ApprovedUsers;
             AuthorizationResult authorized2 = await auth.AuthorizeAsync(User, allowedUsers1, "TourAccess"); //Who can view this
@@ -146,8 +164,9 @@
             //"esri/tasks/Locator",
             "esri/Map",
             "esri/views/MapView",
-            "esri/Graphic"
-        ], function (Map, MapView, Graphic) {
+            "esri/Graphic",
+            "esri/Color"
+        ], function (Map, MapView, Graphic, Color) {
 
             //// Set up a locator task using the world geocoding service
             //var locatorTask = new Locator({
@@ -187,6 +206,7 @@
             var pointVisibility = JSON.parse("@Json.Serialize(visible)");
             var pointIds = @Json.Serialize(tourIds);
             var placeNames = @Json.Serialize(placeNames);
+            var colors = @Json.Serialize(colors);
 
  
 
@@ -199,8 +219,18 @@
                 if (!pointVisibility[i])
                     continue;
 
+            var colorSymbol = {
+                type: "simple-marker",
+                color: colors[i], 
+                outline: {
+                    color: [255, 255, 255], // white
+                    width: 1
+                }
+            };
+
+
                 var pointOnTheMap1 = new Graphic({
-                    symbol: simpleMarkerSymbol
+                    symbol: colorSymbol,
                 });
 
                 var longitude = ePoint[0];
@@ -270,7 +300,7 @@
 
                 pointOnTheMap.geometry = point; //draws the point
 
-
+                   
                     longOb.value = lon
                     latOb.value = lat //For create mode, we are setting this coord
                 }

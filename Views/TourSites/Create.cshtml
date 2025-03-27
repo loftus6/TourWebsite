@@ -77,11 +77,19 @@
                 </div>
             </table>
 
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="IconColor" class="control-label">Icon Color</label>
+                    <input asp-for="IconColor" type="color" class="form-control" value="@Model.IconColor" />
+                    <span asp-validation-for="Lattitude" class="text-danger"></span>
+                </div>
+            </table>
+
 
             <table class="table table-bordered table-sm">
             <label>Visibility</label>
             <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
-                <option selected="selected" value="">Select Visibility</option>
+                <option selected="selected" value="@VisibilityType.Private">Select Visibility</option>
 
             </select>
             </table>

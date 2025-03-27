@@ -190,6 +190,8 @@ namespace TourWebsite.Controllers
                 tourSite.ThumbnailID = tourModification.Thumbnail;
                 tourSite.AudioID = tourModification.AudioTrack;
 
+                tourSite.IconColor = tourModification.IconColor;
+
 
 
                 _context.Add(tourSite);
@@ -298,6 +300,8 @@ namespace TourWebsite.Controllers
                 tourSite.Longitude = tourModification.Longitude;
                 tourSite.Lattitude = tourModification.Lattitude;
                 tourSite.Visibility = tourModification.Visibility;
+
+                tourSite.IconColor = tourModification.IconColor;
 
                 List<string> newApprovedUsers = new List<string>();
                 List<string> newApprovedViewers = new List<string>();

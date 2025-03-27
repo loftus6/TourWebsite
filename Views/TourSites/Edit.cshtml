@@ -121,6 +121,14 @@
                 </div>
             </table>
 
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="IconColor" class="control-label">Icon Color</label>
+                    <input asp-for="IconColor" type="color" class="form-control" value="@Model.TourSite.IconColor" />
+                    <span asp-validation-for="IconColor" class="text-danger"></span>
+                </div>
+            </table>
+
 
             @if(authorized1.Succeeded) {
             <label>Visibility</label>
