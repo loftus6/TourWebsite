@@ -84,6 +84,9 @@ namespace TourWebsite.Controllers
                     FileExtension = "Embed",
                 };
 
+                if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
+                    embedFile.Tags.Add(fileEdit.TagToAdd);
+
                 _context.Add(embedFile);
                 await _context.SaveChangesAsync();
             }
@@ -109,6 +112,9 @@ namespace TourWebsite.Controllers
                                 Embed = false,
                                 EmbedUrl = ""
                             };
+
+                            if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
+                                addedFile.Tags.Add(fileEdit.TagToAdd);
 
                             _context.Add(addedFile);
                             await _context.SaveChangesAsync();
@@ -237,6 +243,21 @@ namespace TourWebsite.Controllers
             //Updates
             file.FileName = fileEdit.FileName;
 
+            var tags = file.Tags;
+
+            if (fileEdit.RemoveTags != null)
+            {
+                foreach (string remove in fileEdit.RemoveTags)
+                {
+                    tags.Remove(remove);
+                }
+            }
+
+
+            if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
+                tags.Add(fileEdit.TagToAdd);
+
+            file.Tags = tags;
 
             //push to db
             try

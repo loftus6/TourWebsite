@@ -19,5 +19,9 @@ namespace TourWebsite.Models.Files
         //For edit
         public UploadedFile FileToEdit { get; set; }
         public string FileToEditId { get; set; }
+
+        public string TagToAdd { get; set; }
+
+        public List<string> RemoveTags { get; set; }
     }
 }

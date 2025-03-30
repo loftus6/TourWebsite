@@ -33,6 +33,33 @@
 
             <input asp-for="FileToEditId" type="hidden" value="@Model.FileToEdit.Id" />
 
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="TagToAdd" class="control-label">Add Tag</label>
+                    <input asp-for="TagToAdd" class="form-control" value="" />
+                    <span asp-validation-for="TagToAdd" class="text-danger"></span>
+                </div>
+            </table>
+
+            <table class="table table-bordered table-sm">
+                <label>Remove Tags</label>
+                @if (Model.FileToEdit.Tags.Count() == 0)
+                {
+                    <tr><td colspan="2">No tags currently</td></tr>
+                }
+                else
+                {
+                    @foreach (string tag in Model.FileToEdit.Tags)
+                    {
+                        <tr>
+                            <td>@tag</td>
+                            <td>
+                                <input type="checkbox" name="RemoveTags" value="@tag">
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

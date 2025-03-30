@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-12">
         <form asp-action="Upload" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -43,6 +43,14 @@
                 </div>
                 </table>
             }
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="TagToAdd" class="control-label">Add Tag</label>
+                    <input asp-for="TagToAdd" class="form-control" value="" />
+                    <span asp-validation-for="TagToAdd" class="text-danger"></span>
+                </div>
+            </table>
 
             <input hidden type="checkbox" asp-for="EmbedOrUpload" value="@Model.EmbedOrUpload"/>
 
