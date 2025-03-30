@@ -1,2 +1,282 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Data
+@inject TourWebsiteContext tourSiteContext
+@inject IAuthorizationService auth
+
+<script defer type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+
+<!-- Load the ArcGIS Maps SDK for JavaScript core API -->
+<link defer rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/dark/main.css" />
+<script src="https://js.arcgis.com/4.32/"></script>
+
+<!-- Load map components -->
+<script defer type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+
+
+@{
+
+
+
+
+    var toursites = tourSiteContext.TourSites;
+
+    var longLat = new List<double[]>();
+
+    var visible = new List<bool>();
+
+    var editable = new List<bool>();
+
+    var tourIds = new List<string>();
+
+    var placeNames = new List<string>();
+
+    var colors = new List<string>();
+
+    var iconColors = new List<string>();
+
+
+    foreach (var site in toursites)
+    {
+        longLat.Add([site.Longitude, site.Lattitude]);
+
+
+
+
+
+        if (site.IconColor != null && site.IconColor != "")
+        {
+            colors.Add(site.IconColor);
+
+        }
+        else
+        {
+            colors.Add("#000000");
+        }
+
+        if (site.IconBorderColor != null && site.IconBorderColor != "")
+        {
+            iconColors.Add(site.IconBorderColor);
+
+        }
+        else
+        {
+            iconColors.Add("#ffffff");
+        }
+        var allowedUsers1 = site.ApprovedUsers;
+        AuthorizationResult authorized2 = await auth.AuthorizeAsync(User, allowedUsers1, "TourAccess"); //Who can view this
+
+        var allowedUsers2 = site.ApprovedEditUsers;
+        AuthorizationResult authorized3 = await auth.AuthorizeAsync(User, allowedUsers2, "TourAccess"); //Who can edit this
+
+        if (authorized2.Succeeded || authorized3.Succeeded || (site.Visibility == VisibilityType.Public)) //Always show public
+            visible.Add(true);
+        else
+            visible.Add(false);
+
+        tourIds.Add(site.Id);
+
+        placeNames.Add(site.Title);
+
+    }
+}
+
+@* Map stuff *@
+<script defer>
+
+
+    require([
+        //"esri/tasks/Locator",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/Graphic",
+        "esri/Color"
+    ], function (Map, MapView, Graphic, Color) {
+
+        //// Set up a locator task using the world geocoding service
+        //var locatorTask = new Locator({
+        //    url:
+        //        "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+        //});
+
+        var map = new Map({
+            basemap: "topo-vector"
+        });
+
+        var view = new MapView({
+            container: "viewDiv",
+            map: map,
+            center: [-82.4452, 38.4191,], // longitude, latitude
+
+            //this is huntington
+            zoom: 18
+        });
+
+        //view.ui.add("instruction", "bottom-left");
+
+        var simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: [226, 119, 40],  // orange
+            outline: {
+                color: [255, 255, 255], // white
+                width: 1
+            }
+        };
+
+
+
+
+
+        var existingPoints = JSON.parse("@Json.Serialize(longLat)");
+        var pointVisibility = JSON.parse("@Json.Serialize(visible)");
+        var pointIds = @Json.Serialize(tourIds);
+        var placeNames = @Json.Serialize(placeNames);
+        var colors = @Json.Serialize(colors);
+        var iconColors =  @Json.Serialize(iconColors);
+
+
+
+
+
+        for (let i = 0; i < existingPoints.length; i++){
+
+
+            ePoint = existingPoints[i];
+
+            if (!pointVisibility[i])
+                continue;
+
+        var colorSymbol = {
+            type: "simple-marker",
+            color: colors[i],
+            outline: {
+                color: iconColors[i], // white
+                width: 1
+            }
+        };
+
+
+            var pointOnTheMap1 = new Graphic({
+                symbol: colorSymbol,
+            });
+
+            var longitude = ePoint[0];
+            var latitude = ePoint[1];
+
+
+
+            var point = {
+                type: "point",
+                longitude: longitude, // Please make sure to use the unrounded values
+                latitude: latitude    // otherwise your point will appear in the wrong spot
+            };
+
+            pointOnTheMap1.geometry = point;
+
+            view.graphics.add(pointOnTheMap1);
+        }
+
+        //create a Graphic without geometry - this will be set later
+        var pointOnTheMap = new Graphic({
+            symbol: simpleMarkerSymbol
+        });
+
+        // add the 'invisible' Graphic to the MapView
+        view.graphics.add(pointOnTheMap);
+        /*******************************************************************
+         * This click event sets generic content on the popup not tied to
+         * a layer, graphic, or popupTemplate. The location of the point is
+         * used as input to a reverse geocode method and the resulting
+         * address is printed to the popup content.
+         *******************************************************************/
+        view.popup.autoOpenEnabled = false;
+
+        var longOb = document.getElementById("long");
+        var latOb = document.getElementById("lat")
+
+        var canAdd = document.getElementById("canAddTour")
+
+        var popUp = document.getElementById("mapPopUp");
+        var popUpScript = document.getElementById("MyScriptData");
+
+        view.on("click", function (event) {
+
+
+
+            var scale = view.scale;
+            // Get the coordinates of the click on the view
+            var longitude = event.mapPoint.longitude;
+            var latitude = event.mapPoint.latitude;
+
+
+
+            // Round the coordinates for visualization purposes
+            var lon = Math.round(longitude * 100000) / 100000;
+            var lat = Math.round(latitude * 100000) / 100000;
+
+
+
+
+            if (typeof (longOb) != 'undefined' && longOb && typeof (canAdd) != 'undefined' && canAdd) {
+
+            var point = {
+                type: "point",
+                longitude: longitude, // Please make sure to use the unrounded values
+                latitude: latitude    // otherwise your point will appear in the wrong spot
+            };
+
+            pointOnTheMap.geometry = point; //draws the point
+
+
+                longOb.value = lon
+                latOb.value = lat //For create mode, we are setting this coord
+            }
+
+            if (typeof (popUp) != 'undefined' && popUp) {
+
+                var min = 1000000;
+                var mindex = -1;
+
+
+                for (let i = 0; i < existingPoints.length; i++){
+
+
+                    if (!pointVisibility[i])
+                        continue;
+                    var epoint = existingPoints[i];
+
+                    var a = longitude - epoint[0];
+                    var b = latitude - epoint[1];
+
+                    var c = Math.sqrt( a*a + b*b );
+
+                    if (c < min) {
+
+                        mindex = i;
+                        min=c;
+                    }
+
+
+
+                }
+
+
+
+                var relScale = (min/scale)*1000000000
+
+
+                if (mindex > -1 && relScale < 20) {
+
+                    popUpScript.textContent = '{"id":\"'+pointIds[mindex]+'\", "partial":true}';
+
+
+                    popUp.click();
+                }
+            }
+
+        });
+    });
+
+</script>
+
+
+<link defer href="~/css/map.css" rel="stylesheet" />

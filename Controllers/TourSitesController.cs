@@ -49,6 +49,13 @@ namespace TourWebsite.Controllers
             return View(new CoordPair());
         }
 
+        public async Task<IActionResult> MoveTour()
+        {
+
+
+            return View(new TourEdit());
+        }
+
         public async Task<IActionResult> ListView()
         {
 
@@ -125,6 +132,14 @@ namespace TourWebsite.Controllers
 
 
             return RedirectToAction(nameof(Create), pair);
+        }
+
+        [Authorize]
+        public IActionResult PassToEdit(TourEdit pair)
+        {
+
+
+            return RedirectToAction(nameof(Edit), pair.TourID);
         }
 
         [Authorize]

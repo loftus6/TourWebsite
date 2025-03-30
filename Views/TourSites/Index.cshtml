@@ -23,6 +23,11 @@
     <a asp-action="AddNewTour">Add New Tour</a>
 }
 
+@section Scripts { 
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+
+} 
+
 
 @section Map {
 
