@@ -312,7 +312,7 @@ namespace TourWebsite.Controllers
             return View(file);
         }
 
-        public async Task<ActionResult> AttachmentList(string Target, string Target2, FileType fileType, string searchString = "")
+        public async Task<ActionResult> AttachmentList(string Target, string Target2, FileType fileType, string searchString = "", string searchType="")
         {
 
 
@@ -322,15 +322,32 @@ namespace TourWebsite.Controllers
             var files = from m in _context.UploadedFiles
                         select m;
 
+            var lst = new List<UploadedFile>();
 
 
             files = files.Where(s => s.FileType == fileType);
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                files = files.Where(s => s.FileName!.ToUpper().Contains(searchString.ToUpper()));
+                if (searchType == "Title")
+                    files = files.Where(s => s.FileName!.ToUpper().Contains(searchString.ToUpper()));
+
+
+
+                if (searchType == "Tag")
+                {
+                    var lst1 = await files.ToListAsync();
+
+                    lst = lst1.Where(s => s.Tags!.Contains(searchString, StringComparer.OrdinalIgnoreCase)).ToList();
+
+                }
             }
-            return PartialView((await files.ToListAsync(), fileType, Target, Target2));
+
+            if (searchType != "Tag" || String.IsNullOrEmpty(searchString))
+                lst = await files.ToListAsync();
+
+            var one = 1 + 1;
+            return PartialView((lst, fileType, Target, Target2));
         }
 
         private bool FileExists(string id)

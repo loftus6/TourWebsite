@@ -14,6 +14,10 @@
 </div>
 
     <p>
+    <select id="searchType">
+        <option value="Title">Title</option>
+        <option value="Tag">Tag</option>
+    </select>
         <label>Name: <input id="fileSearchBox" type="text" name="SearchString" /></label>
         <a href="javascript:void(0);" name="/File/AttachmentList" class="modalInModal">Search</a>
     </p>
@@ -78,11 +82,11 @@
 
             var $buttonClicked = $(this);
             var searchBox = document.getElementById("fileSearchBox");
+            var searchType = document.getElementById("searchType");
 
             var ViewUrl = $(this).attr('name');
 
-            var extraData = {"Target":"@Model.Item3","Target2":"@Model.Item4","searchString":searchBox.value, "fileType":@((ushort)Model.Item2)};
-
+            var extraData = {"Target":"@Model.Item3","Target2":"@Model.Item4","searchString":searchBox.value,  "searchType":searchType.value,"fileType":@((ushort)Model.Item2)};
 
             var options = { "backdrop": "static", keyboard: true };
 
