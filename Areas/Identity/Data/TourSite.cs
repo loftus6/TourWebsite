@@ -16,6 +16,9 @@ namespace TourWebsite.Models
         public TourSite()
         {
             Id = Guid.NewGuid().ToString();
+            Tags = new List<string>(); //list initialize
+            ApprovedEditUsers = new List<string>();
+            ApprovedUsers = new List<string>();
         }
         public string Id { get; set; }
         public required string Title { get; set; }
@@ -37,6 +40,21 @@ namespace TourWebsite.Models
 
         public string IconColor { get; set; }
         public string IconBorderColor { get; set; }
+
+
+        public string NextTourSiteID { get; set; }
+        public string LastTourSiteID { get; set; }
+
+        [Required]
+        public List<string> Tags { get; set; }
+
+        //Analytics 
+        public int UniqueClicks { get; set; } //If viewed
+        public int UniqueVisitors { get; set; } //If actually in person
+        public int Likes { get; set; } //How many people gave this site a thumbs up so to speak
+        public float VisitorSeconds { get; set; } //Time spent by users at site, in seconds
+
+
 
     }
 }

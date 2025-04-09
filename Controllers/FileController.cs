@@ -76,7 +76,7 @@ namespace TourWebsite.Controllers
                 newName = newName ?? "Embedded File";
                 var embedFile = new UploadedFile()
                 {
-                    FileName = newName,
+                    FileName = newName.Trim(),
                     Embed = true,
                     EmbedUrl = fileEdit.EmbedUrl,
                     FileType=fileEdit.FileType,
@@ -84,8 +84,18 @@ namespace TourWebsite.Controllers
                     FileExtension = "Embed",
                 };
 
-                if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
-                    embedFile.Tags.Add(fileEdit.TagToAdd);
+
+                if (!String.IsNullOrWhiteSpace(fileEdit.TagToAdd))
+                {
+                    var split = fileEdit.TagToAdd.Split("\n");
+
+                    foreach (string tag in split)
+                    {
+                        if (!String.IsNullOrWhiteSpace(tag) && !(embedFile.Tags.Contains(tag.Trim())))
+                            embedFile.Tags.Add(tag.Trim());
+                    }
+                }
+
 
                 _context.Add(embedFile);
                 await _context.SaveChangesAsync();
@@ -106,16 +116,25 @@ namespace TourWebsite.Controllers
                             var addedFile = new UploadedFile()
                             {
                                 Bytes = memoryStream.ToArray(),
-                                FileName = newName,
+                                FileName = newName.Trim(),
                                 FileExtension = Path.GetExtension(newFile.FileName),
                                 FileType=fileEdit.FileType,
                                 Embed = false,
                                 EmbedUrl = ""
                             };
 
-                            if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
-                                addedFile.Tags.Add(fileEdit.TagToAdd);
 
+                            if (!String.IsNullOrWhiteSpace(fileEdit.TagToAdd))
+                            {
+                                var split = fileEdit.TagToAdd.Split("\n");
+
+                                foreach (string tag in split)
+                                {
+
+                                    if (!String.IsNullOrWhiteSpace(tag) && !(addedFile.Tags.Contains(tag.Trim())))
+                                        addedFile.Tags.Add(tag.Trim());
+                                }
+                            }
                             _context.Add(addedFile);
                             await _context.SaveChangesAsync();
                         }
@@ -245,6 +264,18 @@ namespace TourWebsite.Controllers
 
             var tags = file.Tags;
 
+
+            if (!String.IsNullOrWhiteSpace(fileEdit.TagToAdd))
+            {
+                var split = fileEdit.TagToAdd.Split("\n");
+
+                foreach (string tag in split)
+                {
+                    if (!String.IsNullOrWhiteSpace(tag) && !(tags.Contains(tag.Trim())))
+                        tags.Add(tag.Trim());
+                }
+            }
+
             if (fileEdit.RemoveTags != null)
             {
                 foreach (string remove in fileEdit.RemoveTags)
@@ -252,11 +283,6 @@ namespace TourWebsite.Controllers
                     tags.Remove(remove);
                 }
             }
-
-
-            if (fileEdit.TagToAdd != null && fileEdit.TagToAdd != "")
-                tags.Add(fileEdit.TagToAdd);
-
             file.Tags = tags;
 
             //push to db

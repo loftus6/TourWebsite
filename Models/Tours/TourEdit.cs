@@ -40,10 +40,13 @@ namespace TourWebsite.Models.Tours
         public string IconColor { get; set; }
         public string IconBorderColor { get; set; }
 
+        public string NextTourID { get; set; }
+
 
         //For editing
         public bool RemoveThumbnail { get; set; }
         public bool RemoveAudio { get; set; }
+        public bool RemoveNextTour { get; set; }
 
         public string TourID { get; set; }
         public string TourDescription { get; set; }
