@@ -12,8 +12,8 @@ using TourWebsite.Data;
 namespace TourWebsite.Migrations
 {
     [DbContext(typeof(TourWebsiteContext))]
-    [Migration("20250322185520_rename1")]
-    partial class rename1
+    [Migration("20250409160220_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -285,14 +285,38 @@ namespace TourWebsite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("AudioID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconBorderColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastTourSiteID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Lattitude")
                         .HasColumnType("decimal(25, 8)");
 
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Longitude")
                         .HasColumnType("decimal(25, 8)");
+
+                    b.Property<string>("NextTourSiteID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tags")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThumbnailID")
                         .HasColumnType("nvarchar(max)");
@@ -301,8 +325,17 @@ namespace TourWebsite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UniqueClicks")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UniqueVisitors")
+                        .HasColumnType("int");
+
                     b.Property<int>("Visibility")
                         .HasColumnType("int");
+
+                    b.Property<float>("VisitorSeconds")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

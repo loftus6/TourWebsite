@@ -297,7 +297,6 @@ namespace TourWebsite.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastTourSiteID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Lattitude")
@@ -310,7 +309,6 @@ namespace TourWebsite.Migrations
                         .HasColumnType("decimal(25, 8)");
 
                     b.Property<string>("NextTourSiteID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tags")

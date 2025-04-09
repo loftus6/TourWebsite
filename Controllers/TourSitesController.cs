@@ -190,13 +190,18 @@ namespace TourWebsite.Controllers
 
                 if (tourModification.Email != null) //Adds editor if email exists
                 {
-                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(tourModification.Email);
-                    if (user1 != null)
+
+                    var emails = tourModification.Email.Split("\n");
+
+                    foreach (string email in emails)
                     {
+                        var fixed_email = email.Trim();
+                        TourWebsiteUser user1 = await userManager.FindByEmailAsync(fixed_email);
+                        if (user1 != null)
+                        {
 
-                        newApprovedEditors.Add(user1.Email);
-
-
+                            newApprovedEditors.Add(user1.Email);
+                        }
                     }
                 }
 

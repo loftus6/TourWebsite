@@ -42,8 +42,8 @@ namespace TourWebsite.Models
         public string IconBorderColor { get; set; }
 
 
-        public string NextTourSiteID { get; set; }
-        public string LastTourSiteID { get; set; }
+        public string? NextTourSiteID { get; set; }
+        public string? LastTourSiteID { get; set; }
 
         [Required]
         public List<string> Tags { get; set; }

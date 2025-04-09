@@ -47,7 +47,7 @@
                        "
                         emailBox = document.getElementById('@Model.Item2');
                         if (typeof (emailBox) != 'undefined' && emailBox) {
-                        emailBox.value = `@item.Email`;
+                        emailBox.value += `@item.Email`+`\n`;
     
                         }   
                         $('#myModal').modal('hide');

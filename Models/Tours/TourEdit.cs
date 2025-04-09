@@ -12,12 +12,13 @@ namespace TourWebsite.Models.Tours
         public IEnumerable<TourWebsiteUser> Members { get; set; }
         public IEnumerable<TourWebsiteUser> Viewers { get; set; }
 
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")] //https://stackoverflow.com/questions/16712043/email-address-validation-using-asp-net-mvc-data-type-attributes
-        [StringLength(50)]
+        //[RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")] //https://stackoverflow.com/questions/16712043/email-address-validation-using-asp-net-mvc-data-type-attributes
+        //[StringLength(50)]
+        //Add this handling in the controller to support lists
         public string Email { get; set; }
 
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")] //https://stackoverflow.com/questions/16712043/email-address-validation-using-asp-net-mvc-data-type-attributes
-        [StringLength(50)]
+        //[RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")] //https://stackoverflow.com/questions/16712043/email-address-validation-using-asp-net-mvc-data-type-attributes
+        //[StringLength(50)]
         public string? EmailViewer { get; set; }
 
         [Required]
