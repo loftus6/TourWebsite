@@ -130,6 +130,14 @@
             @* @Html.ActionLink("User List", "UserList", "Role", new {}, *@
             @*          new { @class = "modalManager" }) *@
 
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label asp-for="TagToAdd" class="control-label">Add Tags</label>
+                    <textarea asp-for="TagToAdd" class="form-control"></textarea>
+                    <span asp-validation-for="TagToAdd" class="text-danger"></span>
+                </div>
+            </table>
+
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

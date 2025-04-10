@@ -17,6 +17,8 @@ using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Areas.Identity.Pages.Account;
 using TourWebsite.Data;
 using TourWebsite.Models;
+using TourWebsite.Models.Files;
+using TourWebsite.Models.Roles;
 using TourWebsite.Models.Tours;
 
 namespace TourWebsite.Controllers
@@ -215,6 +217,17 @@ namespace TourWebsite.Controllers
                 tourSite.IconColor = tourModification.IconColor;
                 tourSite.IconBorderColor = tourModification.IconBorderColor;
 
+                if (!String.IsNullOrWhiteSpace(tourModification.TagToAdd))
+                {
+                    var split = tourModification.TagToAdd.Split("\n");
+
+                    foreach (string tag in split)
+                    {
+                        if (!String.IsNullOrWhiteSpace(tag) && !(tourSite.Tags.Contains(tag.Trim())))
+                            tourSite.Tags.Add(tag.Trim());
+                    }
+                }
+
 
 
                 _context.Add(tourSite);
@@ -405,6 +418,30 @@ namespace TourWebsite.Controllers
                     }
 
                 }
+
+                var tags = tourSite.Tags;
+
+
+                if (!String.IsNullOrWhiteSpace(tourModification.TagToAdd))
+                {
+                    var split = tourModification.TagToAdd.Split("\n");
+
+                    foreach (string tag in split)
+                    {
+                        if (!String.IsNullOrWhiteSpace(tag) && !(tags.Contains(tag.Trim())))
+                            tags.Add(tag.Trim());
+                    }
+                }
+
+                if (tourModification.RemoveTags != null)
+                {
+                    foreach (string remove in tourModification.RemoveTags)
+                    {
+                        tags.Remove(remove);
+                    }
+                }
+
+                tourSite.Tags = tags;
 
                 tourSite.ApprovedUsers = newApprovedViewers;
 

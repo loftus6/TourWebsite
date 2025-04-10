@@ -56,5 +56,9 @@ namespace TourWebsite.Models.Tours
         public string[]? DeleteIds { get; set; } //This ID is actually in the form of an email for compatibility with Identity Library
 
         public string[]? DeleteIdsViewer { get; set; } //Likewise
+
+        public string TagToAdd { get; set; }
+
+        public List<string> RemoveTags { get; set; }
     }
 }
