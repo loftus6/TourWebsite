@@ -1,0 +1,110 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model ValueTuple<List<TourSite>, string, string>
+@using TourWebsite.Models.Files
+
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal" aria-hidden="true" onclick="$('#myModal').modal('hide');">×</button>
+    <h2>@Model.Item2</h2>
+</div>
+
+    <p>
+    <select id="searchType">
+        <option value="Title">Title</option>
+        <option value="Tag">Tag</option>
+    </select>
+        <label>Name: <input id="fileSearchBox" type="text" name="SearchString" /></label>
+        <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalInModal">Search</a>
+    </p>
+
+<table class="table">
+    <thead>
+        @foreach (var item in Model.Item1)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.Title)
+                </th>
+
+                <th></th>
+            </tr>
+
+
+            break;
+        }
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Item1) {
+
+
+            <tr>
+
+                <td>
+                    <a href="javascript:void(0);"
+                       onclick=
+                       "
+                        emailBox = document.getElementById('@Model.Item2');
+
+                        if (typeof (emailBox) != 'undefined' && emailBox) {
+                            emailBox.value = `@item.Id`;
+                        }
+
+                        emailBox2 = document.getElementById('@Model.Item3');
+
+                        if (typeof (emailBox2) != 'undefined' && emailBox2) {
+                            emailBox2.textContent = `Next Tour: @item.Title`;
+                        }
+                        $('#myModal').modal('hide');
+
+
+                        "
+
+                       >@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+
+
+        $(function () {
+        $(".modalInModal").click(function () {
+
+
+            var $buttonClicked = $(this);
+            var searchBox = document.getElementById("fileSearchBox");
+            var searchType = document.getElementById("searchType");
+
+            var ViewUrl = $(this).attr('name');
+
+            var extraData = {"Target":"@Model.Item2", "Target2":"@Model.Item3", "searchString":searchBox.value,  "searchType":searchType.value};
+
+            var options = { "backdrop": "static", keyboard: true };
+
+            $.ajax({
+                type: "GET",
+                url: ViewUrl,
+                contentType: "application/json; charset=utf-8",
+                data: extraData,
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+</script>
+

@@ -231,6 +231,21 @@
             </table>
 
                 <table class="table table-bordered table-sm">
+                    <div type="email" class="form-group">
+                        <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Tour:</label>
+                        <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager" extra-data='#TourSiteData'>Pick Next Tour</a>
+                        <script type="application/json" id="TourSiteData">
+                            {
+                            "Target": "TourBox",
+                            "Target2": "TourLabel"
+                            }
+                        </script>
+                        <input asp-for="NextTourID" id="TourBox" class="form-control" hidden></input>
+                        <span asp-validation-for="NextTourID" class="text-danger"></span>
+                    </div>
+                </table>
+
+                <table class="table table-bordered table-sm">
                     <div class="form-group">
                         <label asp-for="TagToAdd" class="control-label">Add Tags</label>
                         <textarea asp-for="TagToAdd" class="form-control"></textarea>

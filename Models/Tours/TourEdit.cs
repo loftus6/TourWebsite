@@ -57,6 +57,7 @@ namespace TourWebsite.Models.Tours
 
         public string[]? DeleteIdsViewer { get; set; } //Likewise
 
+
         public string TagToAdd { get; set; }
 
         public List<string> RemoveTags { get; set; }

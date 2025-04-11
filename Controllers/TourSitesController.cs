@@ -228,6 +228,17 @@ namespace TourWebsite.Controllers
                     }
                 }
 
+                if (tourModification.NextTourID != null)
+                {
+                    var nextSite = (await _context.TourSites.FindAsync(tourModification.NextTourID));
+                    if (nextSite != null)
+                    {
+                        tourSite.NextTourSiteID = nextSite.Id;
+                        nextSite.LastTourSiteID = tourSite.Id;
+
+                    }
+                }
+
 
 
                 _context.Add(tourSite);
@@ -473,6 +484,18 @@ namespace TourWebsite.Controllers
                     tourSite.AudioID = null;
                 }
 
+                //Links next and last (TODO add multiple lasts maybe)
+                if (tourModification.NextTourID != null)
+                {
+                    var nextSite = (await _context.TourSites.FindAsync(tourModification.NextTourID));
+                    if (nextSite != null)
+                    {
+                        tourSite.NextTourSiteID = nextSite.Id;
+                        nextSite.LastTourSiteID = tourSite.Id;
+
+                    }
+                }
+
                 try
                 {
                     _context.Update(tourSite);
@@ -545,6 +568,41 @@ namespace TourWebsite.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<ActionResult> TourListPop(string Target, string Target2, string searchString = "", string searchType = "")
+        {
+
+
+
+
+
+            var tours = from m in _context.TourSites
+                        select m;
+
+            var lst = new List<TourSite>();
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (searchType == "Title")
+                    tours = tours.Where(s => s.Title!.ToUpper().Contains(searchString.ToUpper()));
+
+
+
+                if (searchType == "Tag")
+                {
+                    var lst1 = await tours.ToListAsync();
+
+                    lst = lst1.Where(s => s.Tags!.Contains(searchString, StringComparer.OrdinalIgnoreCase)).ToList();
+
+                }
+            }
+
+            if (searchType != "Tag" || String.IsNullOrEmpty(searchString))
+                lst = await tours.ToListAsync();
+
+            return PartialView((lst, Target, Target2));
         }
 
         private bool TourSiteExists(string id)

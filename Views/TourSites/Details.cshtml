@@ -23,6 +23,17 @@
 else {
     <h1>Details</h1>
 }
+<div>
+
+    @if (Model.Item1.LastTourSiteID != null)
+    {
+        <a asp-action="Details" asp-route-id="@Model.Item1.LastTourSiteID">Previous Tour</a>
+    }
+    @if (Model.Item1.NextTourSiteID != null)
+    {
+        <a asp-action="Details" asp-route-id="@Model.Item1.NextTourSiteID">Next Tour</a>
+    }
+</div>
 
 <div>
     <hr />

@@ -372,7 +372,6 @@ namespace TourWebsite.Controllers
             if (searchType != "Tag" || String.IsNullOrEmpty(searchString))
                 lst = await files.ToListAsync();
 
-            var one = 1 + 1;
             return PartialView((lst, fileType, Target, Target2));
         }
 
