@@ -70,5 +70,20 @@ namespace TourWebsite.Areas.Identity.Data
             return "";
         }
 
+        public string TagsToString()
+        {
+            var toRet = "";
+            for (var i = 0; i < Tags.Count(); i++)
+            {
+                toRet += Tags[i];
+
+                if (i < Tags.Count() - 1)
+                    toRet += ", ";
+
+            }
+
+            return toRet;
+        }
     }
+
 }
