@@ -34,6 +34,8 @@
 
     var iconColors = new List<string>();
 
+    var tourLines = new List<double[]>();
+
 
     foreach (var site in toursites)
     {
@@ -75,6 +77,14 @@
 
         tourIds.Add(site.Id);
 
+        if (site.NextTourSiteID != null)
+        {
+            var nextSite = toursites.Find(site.NextTourSiteID);
+
+            if (nextSite != null)
+                tourLines.Add([site.Longitude, site.Lattitude, nextSite.Longitude, nextSite.Lattitude]);
+        }
+
         placeNames.Add(site.Title);
 
     }
@@ -89,8 +99,9 @@
         "esri/Map",
         "esri/views/MapView",
         "esri/Graphic",
-        "esri/Color"
-    ], function (Map, MapView, Graphic, Color) {
+        "esri/Color",
+        "esri/layers/GraphicsLayer"
+    ], function (Map, MapView, Graphic, Color, GraphicsLayer) {
 
         //// Set up a locator task using the world geocoding service
         //var locatorTask = new Locator({
@@ -98,8 +109,11 @@
         //        "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
         //});
 
+        const graphicsLayer = new GraphicsLayer();
+
         var map = new Map({
-            basemap: "topo-vector"
+            basemap: "topo-vector",
+            layers: [graphicsLayer]
         });
 
         var view = new MapView({
@@ -122,6 +136,12 @@
             }
         };
 
+         const simpleLineSymbol = {
+          type: "simple-line",
+          color: [226, 119, 40], // Orange
+          width: 2
+        };
+
 
 
 
@@ -132,7 +152,7 @@
         var placeNames = @Json.Serialize(placeNames);
         var colors = @Json.Serialize(colors);
         var iconColors =  @Json.Serialize(iconColors);
-
+        var tourLines = JSON.parse("@Json.Serialize(tourLines)");
 
 
 
@@ -142,17 +162,18 @@
 
             ePoint = existingPoints[i];
 
+
             if (!pointVisibility[i])
                 continue;
 
-        var colorSymbol = {
-            type: "simple-marker",
-            color: colors[i],
-            outline: {
-                color: iconColors[i], // white
-                width: 1
-            }
-        };
+            var colorSymbol = {
+                type: "simple-marker",
+                color: colors[i],
+                outline: {
+                    color: iconColors[i], // white
+                    width: 1
+                }
+            };
 
 
             var pointOnTheMap1 = new Graphic({
@@ -170,9 +191,28 @@
                 latitude: latitude    // otherwise your point will appear in the wrong spot
             };
 
+
             pointOnTheMap1.geometry = point;
 
             view.graphics.add(pointOnTheMap1);
+        }
+
+        for (let i = 0; i < tourLines.length; i++){
+
+            var linePoints = tourLines[i];
+            var polyline = {
+              type: "polyline",
+              paths: [
+                [linePoints[0], linePoints[1]], //Longitude, latitude
+                [linePoints[2], linePoints[3]] //Longitude, latitude
+              ]
+            };
+
+            const polylineGraphic = new Graphic({
+              geometry: polyline,
+              symbol: simpleLineSymbol
+            });
+            graphicsLayer.add(polylineGraphic);
         }
 
         //create a Graphic without geometry - this will be set later
