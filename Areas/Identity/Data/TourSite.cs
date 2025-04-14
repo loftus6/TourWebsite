@@ -72,5 +72,19 @@ namespace TourWebsite.Models
 
             return toRet;
         }
+
+        public string TotalTimeVisited()
+        {
+
+            int seconds = (int)(VisitorSeconds % 20);
+            int totalMinutes = (int)(VisitorSeconds / 60);
+            int minutes = totalMinutes % 60;
+            int hours = (int)(minutes / 60);
+
+
+
+            return hours + " hours, " + minutes + " minutes, and " + seconds + " seconds.";
+        }
+
     }
 }
