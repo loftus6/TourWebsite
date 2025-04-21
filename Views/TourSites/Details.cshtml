@@ -25,13 +25,28 @@ else {
 }
 <div>
 
-    @if (Model.Item1.LastTourSiteID != null)
+    @foreach(string lastId in Model.Item1.LastTourSiteIDs)
     {
-        <a asp-action="Details" asp-route-id="@Model.Item1.LastTourSiteID">Previous Tour</a>
+
+        {
+            var prev = await _context.TourSites.FindAsync(lastId);
+            if (prev != null)
+            {
+                <a asp-action="Details" asp-route-id="@prev.Id">Previous Tour: @prev.Title</a>
+            }
+        }
+
     }
     @if (Model.Item1.NextTourSiteID != null)
     {
-        <a asp-action="Details" asp-route-id="@Model.Item1.NextTourSiteID">Next Tour</a>
+        {
+            var next = await _context.TourSites.FindAsync(Model.Item1.NextTourSiteID);
+            if (next != null)
+            {
+                <a asp-action="Details" asp-route-id="@next.Id">Next Tour: @next.Title</a>
+                
+            }
+        }
     }
 </div>
 

@@ -19,6 +19,7 @@ namespace TourWebsite.Models
             Tags = new List<string>(); //list initialize
             ApprovedEditUsers = new List<string>();
             ApprovedUsers = new List<string>();
+            LastTourSiteIDs = new List<string>();
         }
         public string Id { get; set; }
         public required string Title { get; set; }
@@ -43,7 +44,7 @@ namespace TourWebsite.Models
 
 
         public string? NextTourSiteID { get; set; }
-        public string? LastTourSiteID { get; set; }
+        public List<string> LastTourSiteIDs { get; set; }
 
         [Required]
         public List<string> Tags { get; set; }

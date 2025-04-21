@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourWebsite.Data;
 
@@ -11,9 +12,11 @@ using TourWebsite.Data;
 namespace TourWebsite.Migrations
 {
     [DbContext(typeof(TourWebsiteContext))]
-    partial class TourWebsiteContextModelSnapshot : ModelSnapshot
+    [Migration("20250421214706_InitialCreate5")]
+    partial class InitialCreate5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

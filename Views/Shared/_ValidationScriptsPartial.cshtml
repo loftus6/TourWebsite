@@ -156,65 +156,54 @@
         var lineColor = [0,0,0,255] //black
 
         const LineArrowSymbol = {
-        type: "cim",
-        data: {
-            type: "CIMSymbolReference",
-            symbol: {
-                type: "CIMLineSymbol",
-                symbolLayers: [{
-                    type: "CIMSolidStroke",
-                    enable: true,
-                    width: 1,
-                    color: lineColor
-                },
-                {
-                    // arrow symbol
-                    type: "CIMVectorMarker",
-                    enable: true,
-                    size: 3,
-                    markerPlacement: {
-                        type: "CIMMarkerPlacementAlongLineSameSize",
-                        endings: "NoConstraint",
-                        offsetAlongLine: 25,
-                        placementTemplate: [50],
-                        angleToLine: true
+            type: "cim",
+            data: {
+                type: "CIMSymbolReference",
+                symbol: {
+                    type: "CIMLineSymbol",
+                    symbolLayers: [{
+                        type: "CIMSolidStroke",
+                        enable: true,
+                        width: 1,
+                        color: lineColor
                     },
-                    frame: {
-                        xmin: -5,
-                        ymin: -5,
-                        xmax: 5,
-                        ymax: 5
-                    },
-                    markerGraphics: [{
-                        type: "CIMMarkerGraphic",
-                        geometry: {
-                            rings: [[[-30, -10], [-30, 10], [0, 0], [-30, -10]]]
+                    {
+                        // arrow symbol
+                        type: "CIMVectorMarker",
+                        enable: true,
+                        size: 3,
+                        markerPlacement: {
+                            type: "CIMMarkerPlacementAlongLineSameSize",
+                            endings: "NoConstraint",
+                            offsetAlongLine: 25,
+                            placementTemplate: [50],
+                            angleToLine: true
                         },
-                        symbol: {
-                            // fill for the arrow symbol
-                            type: "CIMPolygonSymbol",
-                            symbolLayers: [{
-                                type: "CIMSolidFill",
-                                enable: true,
-                                color: lineColor
-                            }]
-                        }
+                        frame: {
+                            xmin: -5,
+                            ymin: -5,
+                            xmax: 5,
+                            ymax: 5
+                        },
+                        markerGraphics: [{
+                            type: "CIMMarkerGraphic",
+                            geometry: {
+                                rings: [[[-30, -10], [-30, 10], [0, 0], [-30, -10]]]
+                            },
+                            symbol: {
+                                // fill for the arrow symbol
+                                type: "CIMPolygonSymbol",
+                                symbolLayers: [{
+                                    type: "CIMSolidFill",
+                                    enable: true,
+                                    color: lineColor
+                                }]
+                            }
+                        }]
                     }]
-                }]
-            }
+                }
             }
         };
-
-
-
-        const simpleLineSymbol = {
-          type: "simple-line",
-          color: [226, 119, 40], // Orange
-          width: 2
-        };
-
-
-
 
 
         var existingPoints = JSON.parse("@Json.Serialize(longLat)");

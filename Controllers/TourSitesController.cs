@@ -231,10 +231,10 @@ namespace TourWebsite.Controllers
                 if (tourModification.NextTourID != null)
                 {
                     var nextSite = (await _context.TourSites.FindAsync(tourModification.NextTourID));
-                    if (nextSite != null)
+                    if (nextSite != null && nextSite.Id != tourSite.Id)
                     {
                         tourSite.NextTourSiteID = nextSite.Id;
-                        nextSite.LastTourSiteID = tourSite.Id;
+                        nextSite.LastTourSiteIDs.Add(tourSite.Id);
 
                     }
                 }
@@ -488,10 +488,10 @@ namespace TourWebsite.Controllers
                 if (tourModification.NextTourID != null)
                 {
                     var nextSite = (await _context.TourSites.FindAsync(tourModification.NextTourID));
-                    if (nextSite != null)
+                    if (nextSite != null && nextSite.Id != tourSite.Id)
                     {
                         tourSite.NextTourSiteID = nextSite.Id;
-                        nextSite.LastTourSiteID = tourSite.Id;
+                        nextSite.LastTourSiteIDs.Add(tourSite.Id);
 
                     }
                 }
