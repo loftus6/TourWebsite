@@ -7,7 +7,6 @@ namespace TourWebsite.Models.Tours
     public class TourEdit
     {
 
-        public TourSite TourSite { get; set; }
 
         public IEnumerable<TourWebsiteUser> Members { get; set; }
         public IEnumerable<TourWebsiteUser> Viewers { get; set; }
@@ -34,14 +33,16 @@ namespace TourWebsite.Models.Tours
         [Column(TypeName = "decimal(25, 8)")]
         public double Lattitude { get; set; }
 
-        public string Thumbnail { get; set; }
+        public string? Thumbnail { get; set; }
 
-        public string AudioTrack { get; set; }
+        public string? AudioTrack { get; set; }
 
-        public string IconColor { get; set; }
-        public string IconBorderColor { get; set; }
+        public string? IconColor { get; set; }
+        public string? IconBorderColor { get; set; }
 
-        public string NextTourID { get; set; }
+        public string? NextTourID { get; set; }
+
+        public string NextTourTitle { get; set; }
 
 
         //For editing
@@ -55,11 +56,13 @@ namespace TourWebsite.Models.Tours
 
         public string[]? DeleteIds { get; set; } //This ID is actually in the form of an email for compatibility with Identity Library
 
+
+
         public string[]? DeleteIdsViewer { get; set; } //Likewise
 
 
         public string TagToAdd { get; set; }
-
+        public List<string> Tags { get; set; }
         public List<string> RemoveTags { get; set; }
     }
 }

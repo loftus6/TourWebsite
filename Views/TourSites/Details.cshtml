@@ -44,7 +44,7 @@ else {
             if (next != null)
             {
                 <a asp-action="Details" asp-route-id="@next.Id">Next Tour: @next.Title</a>
-                
+
             }
         }
     }
@@ -119,7 +119,7 @@ else {
             </dd>
 
             <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Item1.UniqueVisitors)
+                @Html.DisplayNameFor(model => model.Item1.VisitorSeconds)
             </dt>
             <dd class="col-sm-8">
                 @Html.Raw(Model.Item1.TotalTimeVisited())
@@ -132,10 +132,14 @@ else {
     @if (authorized3.Succeeded)
     {
         <a asp-action="Edit" asp-route-id="@Model.Item1.Id">Edit</a>
+        <a asp-action="MoveTour" asp-route-id="@Model.Item1.Id">Move</a>
     }
     @if (authorized.Succeeded)
     {
         <a asp-action="Delete" asp-route-id="@Model.Item1.Id">Delete</a>
     }
-    <a asp-action="Index">Back to List</a>
+    @if (!Model.Item2)
+    {
+        <a asp-action="Index">Back to List</a>
+    }
 </div>

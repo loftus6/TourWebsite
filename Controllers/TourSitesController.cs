@@ -51,11 +51,30 @@ namespace TourWebsite.Controllers
             return View(new CoordPair());
         }
 
-        public async Task<IActionResult> MoveTour()
+        public async Task<IActionResult> MoveTour(string? id)
         {
 
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            return View(new TourEdit());
+            var tour = await _context.TourSites.FindAsync(id);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            var edit = new TourEdit();
+
+            edit.TourID = tour.Id;
+
+            edit.Lattitude = tour.Lattitude;
+            edit.Longitude = tour.Longitude;
+
+
+            return View(edit);
         }
 
         public async Task<IActionResult> ListView()
@@ -137,12 +156,12 @@ namespace TourWebsite.Controllers
         }
 
         [Authorize]
-        public IActionResult PassToEdit(TourEdit pair)
+        public async Task<IActionResult> PassToEdit(TourEdit edit)
         {
 
-
-            return RedirectToAction(nameof(Edit), pair.TourID);
+            return RedirectToAction(nameof(Edit), edit.TourID);
         }
+
 
         [Authorize]
         public IActionResult Create(CoordPair pair)
@@ -306,7 +325,38 @@ namespace TourWebsite.Controllers
 
 
 
-            edit.TourSite = tourSite;
+
+            //sets values for editing
+            edit.TourID = id;
+            edit.Title = tourSite.Title;
+            edit.Thumbnail = tourSite.ThumbnailID;
+            edit.AudioTrack = tourSite.AudioID;
+            edit.TourDescription = tourSite.Description;
+
+            edit.Longitude = tourSite.Longitude;
+            edit.Lattitude = tourSite.Lattitude;
+
+            edit.IconColor = tourSite.IconColor;
+            edit.IconBorderColor = tourSite.IconBorderColor;
+
+            edit.Visibility = tourSite.Visibility;
+
+            if (edit.NextTourID != null)
+            {
+                edit.NextTourID = tourSite.NextTourSiteID;
+                var next = await _context.TourSites.FindAsync(edit.NextTourID);
+
+                if (next != null)
+                {
+                    edit.NextTourTitle = next.Title;
+                }
+            }
+
+
+            edit.Tags = tourSite.Tags;
+
+            
+
             edit.Members = members;
             edit.Viewers = viewers;
 
@@ -491,7 +541,12 @@ namespace TourWebsite.Controllers
                     if (nextSite != null && nextSite.Id != tourSite.Id)
                     {
                         tourSite.NextTourSiteID = nextSite.Id;
-                        nextSite.LastTourSiteIDs.Add(tourSite.Id);
+
+                        if (!(nextSite.LastTourSiteIDs.Contains(tourSite.Id)))
+                        {
+                            nextSite.LastTourSiteIDs.Add(tourSite.Id);
+
+                        }
 
                     }
                 }

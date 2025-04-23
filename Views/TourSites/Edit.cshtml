@@ -22,16 +22,16 @@
     <div class="col-md-12">
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" name="TourID" value="@Model.TourSite.Id" />
+            <input type="hidden" name="TourID" value="@Model.TourID" />
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label asp-for="Title" class="control-label">Title</label>
-                    <input asp-for="Title" class="form-control" value="@Model.TourSite.Title" />
+                    <input asp-for="Title" class="form-control" value="@Model.Title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </table>
 
-            @if (Model.TourSite.ThumbnailID == null)
+            @if (Model.Thumbnail == null)
             {
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
@@ -52,7 +52,7 @@
             {
 
 
-                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.ThumbnailID);
+                var file = await _context.UploadedFiles.FindAsync(Model.Thumbnail);
 
                 if (file != null)
                 {
@@ -67,7 +67,7 @@
                 
             }
 
-            @if (Model.TourSite.AudioID == null)
+            @if (Model.AudioTrack == null)
             {
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
@@ -86,7 +86,7 @@
             }
             else
             {
-                var file = await _context.UploadedFiles.FindAsync(Model.TourSite.AudioID);
+                var file = await _context.UploadedFiles.FindAsync(Model.AudioTrack);
 
                 if (file != null)
                 {
@@ -101,9 +101,9 @@
             <table class="table table-bordered table-sm">
                 <div class="form-group">
                     <label name="TourDescription" class="control-label">Description</label>
-                    <input id="descriptionVal", type="hidden" class="form-control" value="@Model.TourSite.Description" />
+                    <input id="descriptionVal", type="hidden" class="form-control" value="@Model.TourDescription" />
                     <textarea id="tiny" name="TourDescription" class="form-control"></textarea>
-                    <span asp-validation-for="TourSite.Description" class="text-danger"></span>
+                    <span asp-validation-for="TourDescription" class="text-danger"></span>
                 </div>
             </table>
 
@@ -113,23 +113,18 @@
                     <tr>
                         <td class="col-sm-2">
                             <label asp-for="Longitude" class="control-label">Longitude</label>
-                            <input asp-for="Longitude" id="long" class="form-control" value="@Model.TourSite.Longitude" />
+                            <input asp-for="Longitude" id="long" class="form-control" value="@Model.Longitude" />
                             <span asp-validation-for="Longitude" class="text-danger"></span>
                         </td>
                         <td class="col-sm-2">
                             <label asp-for="Lattitude" class="control-label">Latitude</label>
-                            <input asp-for="Lattitude" id="lat" class="form-control" value="@Model.TourSite.Lattitude" />
+                            <input asp-for="Lattitude" id="lat" class="form-control" value="@Model.Lattitude" />
                             <span asp-validation-for="Lattitude" class="text-danger"></span>
                         </td>
                     <tr />
                 </thead>
 
-                @* <a href="javascript:void(0);" name="/TourSites/Index" class="modalManager" extra-data='#MapData'>Open Map</a> *@
-                @* <script type="application/json" id="MapData"> *@
-                @*     { *@
-                @*         "Target": "targ" *@
-                @*     } *@
-                @* </script> *@
+                
                 
 
             </table>
@@ -140,12 +135,12 @@
                     <tr>
                         <td class="col-sm-2">
                             <label asp-for="IconColor" class="control-label">Icon Color</label>
-                            <input asp-for="IconColor" type="color" class="form-control" value="@Model.TourSite.IconColor" />
+                            <input asp-for="IconColor" type="color" class="form-control" value="@Model.IconColor" />
                             <span asp-validation-for="IconColor" class="text-danger"></span>
                         </td>
                         <td class="col-sm-2">
                             <label asp-for="IconBorderColor" class="control-label">Icon Border Color</label>
-                            <input asp-for="IconBorderColor" type="color" class="form-control" value="@Model.TourSite.IconBorderColor" />
+                            <input asp-for="IconBorderColor" type="color" class="form-control" value="@Model.IconBorderColor" />
                             <span asp-validation-for="IconColor" class="text-danger"></span>
                         </td>
                     <tr />
@@ -156,11 +151,11 @@
             @if(authorized1.Succeeded) {
             <label>Visibility</label>
             <select name="Visibility" asp-items="Html.GetEnumSelectList<VisibilityType>()">
-                <option selected="selected" value="@Model.TourSite.Visibility">Currently: @Model.TourSite.Visibility</option>
+                <option selected="selected" value="@Model.Visibility">Currently: @Model.Visibility</option>
 
             </select>
 
-            @if (Model.TourSite.Visibility == VisibilityType.Restricted) {
+            @if (Model.Visibility == VisibilityType.Restricted) {
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
                         <label asp-for="EmailViewer" class="control-label">Add Viewers</label>
@@ -175,7 +170,7 @@
                     </div>
                 </table>
 
-                <label>Remove viewers from @Model.TourSite.Title</label>
+                <label>Remove viewers from @Model.Title</label>
                 <table class="table table-bordered table-sm">
                     @if (Model.Viewers.Count() == 0)
                     {
@@ -210,7 +205,7 @@
                 </div>
             </table>
 
-            <label>Remove editors from @Model.TourSite.Title</label>
+            <label>Remove editors from @Model.Title</label>
             <table class="table table-bordered table-sm">
                 @if (Model.Members.Count() == 0)
                 {
@@ -232,7 +227,7 @@
 
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
-                        <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Tour:</label>
+                        <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Tour: @Model.NextTourTitle</label>
                         <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager" extra-data='#TourSiteData'>Pick Next Tour</a>
                         <script type="application/json" id="TourSiteData">
                             {
@@ -248,21 +243,21 @@
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
                         <label asp-for="TagToAdd" class="control-label">Add Tags</label>
-                        <textarea asp-for="TagToAdd" class="form-control"></textarea>
+                        <textarea asp-for="TagToAdd" class="form-control" value=""></textarea>
                         <span asp-validation-for="TagToAdd" class="text-danger"></span>
                     </div>
                 </table>
 
 
-                <label>Remove Tags from @Model.TourSite.Title</label>
+                <label>Remove Tags from @Model.Title</label>
                 <table class="table table-bordered table-sm">
-                    @if (Model.TourSite.Tags.Count() == 0)
+                    @if (Model.Tags.Count() == 0)
                     {
                         <tr><td colspan="2">No Tags</td></tr>
                     }
                     else
                     {
-                        @foreach (string tag in Model.TourSite.Tags)
+                        @foreach (string tag in Model.Tags)
                         {
                             <tr>
                                 <td>@tag</td>
@@ -306,8 +301,3 @@
         });
 </script>
 
-@* @section Scripts { *@
-@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
-
-
-@* } *@
