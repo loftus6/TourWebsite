@@ -156,10 +156,93 @@ namespace TourWebsite.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> PassToEdit(TourEdit edit)
+        public async Task<IActionResult> PassToEdit(TourEdit pair)
         {
 
-            return RedirectToAction(nameof(Edit), edit.TourID);
+            if (pair.TourID == null)
+            {
+                return NotFound();
+            }
+
+            var tourSite = await _context.TourSites.FindAsync(pair.TourID);
+            if (tourSite == null)
+            {
+                return NotFound();
+            }
+
+            var allowedUsers = tourSite.ApprovedEditUsers;
+
+            AuthorizationResult authorized = await authService.AuthorizeAsync(User, allowedUsers, "TourAccess");
+
+            if (!authorized.Succeeded)
+            {
+                return Redirect(Globals.AccessDeniedPath);
+            }
+
+            TourEdit edit = new TourEdit();
+
+            List<TourWebsiteUser> members = new List<TourWebsiteUser>();
+            List<TourWebsiteUser> viewers = new List<TourWebsiteUser>();
+
+
+            if (allowedUsers != null)
+            {
+                foreach (var email in allowedUsers)
+                {
+                    members.Add(await userManager.FindByEmailAsync(email));
+                }
+            }
+
+            var allowedViewers = tourSite.ApprovedUsers;
+
+            if (allowedViewers != null)
+            {
+                foreach (var email in allowedViewers)
+                {
+                    viewers.Add(await userManager.FindByEmailAsync(email));
+                }
+            }
+
+
+
+
+
+
+            //sets values for editing
+            edit.TourID = pair.TourID;
+            edit.Title = tourSite.Title;
+            edit.Thumbnail = tourSite.ThumbnailID;
+            edit.AudioTrack = tourSite.AudioID;
+            edit.TourDescription = tourSite.Description;
+
+            edit.Longitude = pair.Longitude;
+            edit.Lattitude = pair.Lattitude;
+
+            edit.IconColor = tourSite.IconColor;
+            edit.IconBorderColor = tourSite.IconBorderColor;
+
+            edit.Visibility = tourSite.Visibility;
+
+            if (edit.NextTourID != null)
+            {
+                edit.NextTourID = tourSite.NextTourSiteID;
+                var next = await _context.TourSites.FindAsync(edit.NextTourID);
+
+                if (next != null)
+                {
+                    edit.NextTourTitle = next.Title;
+                }
+            }
+
+
+            edit.Tags = tourSite.Tags;
+
+
+
+            edit.Members = members;
+            edit.Viewers = viewers;
+
+            return View("edit", edit); //pass auth service to this view
         }
 
 
