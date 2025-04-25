@@ -35,7 +35,7 @@ namespace TourWebsite.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TourWebsiteRole.ToListAsync());
+            return View((await _context.TourWebsiteRole.ToListAsync(), await _context.NonTourPage.ToListAsync()));
         }
 
         // GET: Role/Details/5

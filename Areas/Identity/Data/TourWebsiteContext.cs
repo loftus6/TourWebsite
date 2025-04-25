@@ -16,6 +16,22 @@ public class TourWebsiteContext : IdentityDbContext<TourWebsiteUser>
 
     public DbSet<UploadedFile> UploadedFiles { get; set; } = default!;
 
+    public async Task<NonTourPage> GetMain()
+    {
+        var pages = from m in NonTourPage
+                    select m;
+
+        var mainList = pages.Where(s => s.Title == "Main");
+
+        var listAsync = await mainList.ToListAsync();
+
+
+
+        return listAsync[0]; //May be a better approach
+
+
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -25,4 +41,6 @@ public class TourWebsiteContext : IdentityDbContext<TourWebsiteUser>
     }
 
     public DbSet<TourWebsite.Areas.Identity.Data.TourWebsiteRole> TourWebsiteRole { get; set; } = default!;
+
+    public DbSet<TourWebsite.Areas.Identity.Data.NonTourPage> NonTourPage { get; set; } = default!;
 }

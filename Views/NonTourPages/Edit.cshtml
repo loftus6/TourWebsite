@@ -1,0 +1,123 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Data
+@using TourWebsite.Models.Files
+@model PageEdit
+
+@inject IAuthorizationService auth
+@inject TourWebsiteContext _context
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>@Model.Title</h4>
+<hr />
+<div class="row">
+
+
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input asp-for="Title" hidden class="form-control" />
+
+
+
+            <table class="table table-bordered table-sm">
+                <div class="form-group">
+                    <label name="TourDescription" class="control-label">Description</label>
+                    <input id="descriptionVal" , type="hidden" class="form-control" value="@Model.Description" />
+                    <textarea id="tiny" name="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </table>
+
+            @if (Model.ThumbnailID == null)
+            {
+                <table class="table table-bordered table-sm">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#ThumbnailData'>Pick Thumbnail</a>
+                        <script type="application/json" id="ThumbnailData">
+                            {
+                            "Target": "ThumbnailBox",
+                            "Target2": "ThumbnailPreview",
+                            "FileType": @((ushort)FileType.Image)
+                            }
+                        </script>
+                        <input hidden asp-for="ThumbnailID" class="form-control" id="ThumbnailBox" name="ThumbnailID">
+                        <div id="ThumbnailPreview"></div>
+                    </div>
+                </table>
+            }
+            else
+            {
+
+
+                var file = await _context.UploadedFiles.FindAsync(Model.ThumbnailID);
+
+                if (file != null)
+                {
+                    @Html.Raw(file.HtmlString())
+                }
+                <br />
+                <label>Remove Thumbnail: </label>
+
+
+                <input type="checkbox" asp-for="RemoveThumbnail" />
+                <br />
+
+            }
+
+
+            <table class="table table-sm" cellpadding="0" cellspacing="0" border="0" >
+
+                <thead class="form-group">
+                    <tr>
+                        <td class="col-sm-2">
+                            <label asp-for="BackgroundColor" class="control-label">Background Color</label>
+                            <input asp-for="BackgroundColor" type="color" class="form-control" value="@Model.BackgroundColor" />
+                            <span asp-validation-for="BackgroundColor" class="text-danger"></span>
+                        </td>
+                        <td class="col-sm-2">
+                            <label asp-for="AccentColor1" class="control-label">Accent Color</label>
+                            <input asp-for="AccentColor1" type="color" class="form-control" value="@Model.AccentColor1" />
+                            <span asp-validation-for="AccentColor1" class="text-danger"></span>
+                        </td>
+                    <tr />
+                </thead>
+            </table>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+<script>
+
+    var text = document.getElementById('descriptionVal').value;
+        console.log(text);
+
+        tinymce.init({
+
+        selector: 'textarea#tiny',
+        license_key: 'gpl',
+            plugins: 'lists',
+    toolbar: 'numlist bullist',
+        promotion: false,
+            setup: function (editor) {
+              editor.on('init', function (e) {
+                editor.setContent(text);
+              });
+        }
+        });
+</script>
+

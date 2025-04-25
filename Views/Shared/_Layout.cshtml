@@ -9,6 +9,9 @@
 @{
     AuthorizationResult authorized = await auth.AuthorizeAsync(User, "AdminAccess");
     AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess");
+
+    var mainPage = await tourSiteContext.GetMain();
+    var backgroundCol = mainPage.BackgroundColor;
 }
 <head>
     <meta charset="utf-8" />
@@ -22,6 +25,20 @@
     <link rel="stylesheet" href="~/TourWebsite.styles.css" asp-append-version="true" />
 
 
+    <style>
+        body {
+        background-color:@backgroundCol;
+        }
+
+        .table > thead > tr > td,
+        .table > thead > tr > th,
+        .table > tbody > tr> td,
+        .table > tbody > tr > th {
+            background-color: transparent;
+        }
+    </style>
+
+
     @* TinyMCE text editor *@
     <script type="text/javascript" src="~/js/tinymce/tinymce.min.js"> </script>
 
@@ -30,7 +47,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: @mainPage.AccentColor1">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Huntington Historic Tour</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -75,7 +92,7 @@
 
     <div id='myModal' class='modal'>
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:@backgroundCol">
                 <div id='myModalContent'></div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using TourWebsite.Data;
 using TourWebsite.Models;
 
 namespace TourWebsite.Controllers;
@@ -7,15 +8,17 @@ namespace TourWebsite.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly TourWebsiteContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, TourWebsiteContext tourWebsiteContext)
     {
         _logger = logger;
+        _context = tourWebsiteContext;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> IndexAsync()
     {
-        return View();
+        return View(await _context.GetMain());
     }
 
     public IActionResult Privacy()

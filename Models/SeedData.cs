@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
 
 namespace TourWebsite.Models
@@ -16,25 +17,23 @@ namespace TourWebsite.Models
                     throw new ArgumentNullException("Null RazorPagesMovieContext");
                 }
 
+
                 // Look for any movies.
-                if (context.TourSites.Any())
+                if (context.NonTourPage.Any())
                 {
                     return;   // DB has been seeded
                 }
 
-                //context.TourSites.AddRange(
-                //    new TourSite
-                //    {
-                //        Title = "When Harry Met Sally",
-                //        Description = "asdad",
-                //        Longitude = 10,
-                //        Lattitude = 10,
-                //        ApprovedEditUsers = new List<string>(),
-                //        ApprovedUsers = new List<string>(),
+                var mainPage = new NonTourPage();
+                mainPage.Title = "Main";
+                mainPage.BackgroundColor = "#e0fff3";
+                mainPage.AccentColor1 = "#becfc8";
 
-                //    });
+                context.NonTourPage.Add(mainPage);
 
                 context.SaveChanges();
+
+
             }
         }
     }
