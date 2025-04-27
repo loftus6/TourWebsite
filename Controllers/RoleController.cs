@@ -98,17 +98,28 @@ namespace TourWebsite.Controllers
         public async Task<IActionResult> Update(RoleModification model)
         {
             IdentityResult result;
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || true)
             {
 
-                if (model.AddEmail != null)
+                if (model.AddEmail != null) //Adds editor if email exists
                 {
-                    TourWebsiteUser user1 = await userManager.FindByEmailAsync(model.AddEmail);
-                    if (user1 != null)
+
+                    var emails = model.AddEmail.Split("\n");
+
+                    foreach (string email in emails)
                     {
-                        result = await userManager.AddToRoleAsync(user1, model.RoleName);
-                        if (!result.Succeeded)
-                            return NotFound();
+                        var fixed_email = email.Trim();
+                        TourWebsiteUser user1 = await userManager.FindByEmailAsync(fixed_email);
+
+                        if (user1 != null)
+                        {
+
+                            result = await userManager.AddToRoleAsync(user1, model.RoleName);
+                            if (!result.Succeeded)
+                                return NotFound();
+
+                        }
+
                     }
                 }
                 foreach (string userId in model.DeleteIds ?? new string[] { })

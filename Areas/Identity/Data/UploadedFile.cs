@@ -37,6 +37,7 @@ namespace TourWebsite.Areas.Identity.Data
         {
             var file = this;
 
+
             if (file.Embed)
             {
                 return file.EmbedUrl;

@@ -11,7 +11,7 @@
     AuthorizationResult authorized1 = await auth.AuthorizeAsync(User, null, "TourAccess");
 
     var mainPage = await tourSiteContext.GetMain();
-    var backgroundCol = mainPage.BackgroundColor;
+    var backgroundCol = mainPage.MainColor;
 }
 <head>
     <meta charset="utf-8" />
@@ -47,7 +47,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: @mainPage.AccentColor1">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: @mainPage.AccentColor">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Huntington Historic Tour</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"

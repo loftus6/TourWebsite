@@ -11,25 +11,8 @@
 
     <table cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(70, 130, 180, 0)">
         <tr>
-            <td class="col-6" style="vertical-align: text-top;">
+            <td class="col-12" style="vertical-align: text-top;">
                 @Html.Raw(Model.Description)
-            </td>
-            <td class="=col-1"></td>
-            <td class="col-5" vertical-align: text-top;>
-
-                @{
-                    if (Model.ThumbnailID != null)
-                    {
-
-                        var file = await _context.UploadedFiles.FindAsync(Model.ThumbnailID);
-
-                        if (file != null)
-                        {
-                            @Html.Raw(file.HtmlString());
-                        }
-                    }
-
-                }
             </td>
         </tr>
     </table>

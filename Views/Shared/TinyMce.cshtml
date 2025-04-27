@@ -1,0 +1,77 @@
+﻿@using TourWebsite.Data
+
+@inject TourWebsiteContext _context
+
+
+@{
+
+    var files = from m in _context.UploadedFiles
+                select m;
+
+    files = files.Where(s => s.FileType == TourWebsite.Models.Files.FileType.Image);
+
+    var fileList = files.ToList();
+
+    var imageList = new List<string[]>();
+
+    foreach(var file in fileList)
+    {
+        imageList.Add([file.FileName, file.HandleSrc()]);
+    }
+
+
+
+
+}
+
+<script>
+
+
+    var images = @Json.Serialize(imageList)
+
+    var raw_images = []
+
+    for (let i = 0; i < images.length; i++) {
+        raw_images.push({ title: images[i][0], value:images[i][1] })
+    }
+
+    console.log(raw_images)
+
+    var text = document.getElementById('descriptionVal').value;
+    console.log(text);
+
+    tinymce.init({
+
+        selector: 'textarea#tiny',
+        license_key: 'gpl',
+        plugins: 'lists image',
+        toolbar: 'numlist bullist image',
+        a11y_advanced_options: true,
+        image_list: raw_images,
+        promotion: false,
+        style_formats: [
+          {
+            title: 'Image Left',
+            selector: 'img',
+            styles: {
+              float: 'left',
+              margin: '10px 10px 10px 10px'
+            }
+          },
+          {
+            title: 'Image Right',
+            selector: 'img',
+            styles: {
+              float: 'right',
+              margin: '10px 10px 10px 10px'
+            }
+          }
+        ],
+        image_advtab: true,
+            setup: function (editor) {
+              editor.on('init', function (e) {
+                editor.setContent(text);
+              });
+        }
+        });
+</script>

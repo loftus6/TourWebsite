@@ -4,24 +4,28 @@
     ViewData["Title"] = "UPDATE ROLE";
 }
 
-<h1>Update Role</h1>
-<a asp-action="Index" class="btn btn-secondary">Back</a>
+<h2>Update @(Model.Role.Name)s</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form method="post">
     <input type="hidden" name="roleName" value="@Model.Role.Name" />
     <input type="hidden" name="roleId" value="@Model.Role.Id" />
 
-    <h2>Add To @Model.Role.Name</h2>
     <table class="table table-bordered table-sm">
         <div type="email" class="form-group">
-            <label name="AddEmail" class="control-label"></label>
-            <input name="AddEmail" class="form-control" />
+            <label asp-for="Email" class="control-label">Add editors</label>
+            <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData2'>Pick user</a>
+            <script type="application/json" id="MyScriptData2">
+                {
+                "Target": "EmailBox"
+                }
+            </script>
+            <textarea asp-for="Email" id="EmailBox" class="form-control" name="AddEmail" value=""></textarea>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </table>
 
-    <h2>Remove From @Model.Role.Name</h2>
+    <h2>Remove From @(Model.Role.Name)s</h2>
     <table class="table table-bordered table-sm">
         @if (Model.Members.Count() == 0)
         {
@@ -41,4 +45,5 @@
         }
     </table>
     <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
 </form>

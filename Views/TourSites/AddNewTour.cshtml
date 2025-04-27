@@ -10,8 +10,8 @@
 
 }
 
-<h1>Tours</h1>
-<a asp-action="ListView">List View</a>        
+<h2 id="canAddTour">Click to Add</h2>
+<a asp-action="ListView" class="btn btn-primary">List View</a>
 <br />
 
 @if (authorized1.Succeeded)
@@ -19,9 +19,6 @@
 
 
     @* Maybe not standard, but I am using the presence of this label as a boolean*@
-
-    <label id="canAddTour">Click to Add</label>
-    <br>
 
 
      <form asp-action="PassToCreate">

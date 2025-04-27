@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TourWebsite.Data;
 using TourWebsite.Models;
@@ -21,9 +22,9 @@ public class HomeController : Controller
         return View(await _context.GetMain());
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> Privacy()
     {
-        return View();
+        return View(await _context.GetByName("Privacy"));
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Authorization
+@using TourWebsite.Areas.Identity.Data
 @using TourWebsite.Data
 @using TourWebsite.Models.Files
-@model PageEdit
+@model NonTourPage
 
 @inject IAuthorizationService auth
 @inject TourWebsiteContext _context
@@ -34,60 +35,31 @@
                 </div>
             </table>
 
-            @if (Model.ThumbnailID == null)
-            {
-                <table class="table table-bordered table-sm">
-                    <div class="form-group">
-                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#ThumbnailData'>Pick Thumbnail</a>
-                        <script type="application/json" id="ThumbnailData">
-                            {
-                            "Target": "ThumbnailBox",
-                            "Target2": "ThumbnailPreview",
-                            "FileType": @((ushort)FileType.Image)
-                            }
-                        </script>
-                        <input hidden asp-for="ThumbnailID" class="form-control" id="ThumbnailBox" name="ThumbnailID">
-                        <div id="ThumbnailPreview"></div>
-                    </div>
-                </table>
-            }
-            else
-            {
+            @if(Model.ColorName1 != "" || Model.ColorName2 != "") {
+                <table class="table table-sm" cellpadding="0" cellspacing="0" border="0" >
 
-
-                var file = await _context.UploadedFiles.FindAsync(Model.ThumbnailID);
-
-                if (file != null)
-                {
-                    @Html.Raw(file.HtmlString())
-                }
-                <br />
-                <label>Remove Thumbnail: </label>
-
-
-                <input type="checkbox" asp-for="RemoveThumbnail" />
-                <br />
-
-            }
-
-
-            <table class="table table-sm" cellpadding="0" cellspacing="0" border="0" >
-
-                <thead class="form-group">
-                    <tr>
-                        <td class="col-sm-2">
-                            <label asp-for="BackgroundColor" class="control-label">Background Color</label>
-                            <input asp-for="BackgroundColor" type="color" class="form-control" value="@Model.BackgroundColor" />
-                            <span asp-validation-for="BackgroundColor" class="text-danger"></span>
-                        </td>
-                        <td class="col-sm-2">
-                            <label asp-for="AccentColor1" class="control-label">Accent Color</label>
-                            <input asp-for="AccentColor1" type="color" class="form-control" value="@Model.AccentColor1" />
-                            <span asp-validation-for="AccentColor1" class="text-danger"></span>
-                        </td>
+                    <thead class="form-group">
+                        <tr>
+                            <td class="col-sm-2">
+                                @if (Model.ColorName1 != "")
+                                {
+                                    <label asp-for="MainColor" class="control-label">Background Color</label>
+                                    <input asp-for="MainColor" type="color" class="form-control" value="@Model.MainColor" />
+                                    <span asp-validation-for="MainColor" class="text-danger"></span>
+                                }
+                            </td>
+                            <td class="col-sm-2">
+                                @if (Model.ColorName2 != "")
+                                {
+                                    <label asp-for="AccentColor" class="control-label">Accent Color</label>
+                                    <input asp-for="AccentColor" type="color" class="form-control" value="@Model.AccentColor" />
+                                    <span asp-validation-for="AccentColor" class="text-danger"></span>
+                                }
+                            </td>
                     <tr />
                 </thead>
             </table>
+            }
             
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -97,27 +69,15 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary" asp-controller="Role">Back to List</a>
 </div>
 
 
-<script>
 
-    var text = document.getElementById('descriptionVal').value;
-        console.log(text);
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("TinyMce");
+    }
 
-        tinymce.init({
-
-        selector: 'textarea#tiny',
-        license_key: 'gpl',
-            plugins: 'lists',
-    toolbar: 'numlist bullist',
-        promotion: false,
-            setup: function (editor) {
-              editor.on('init', function (e) {
-                editor.setContent(text);
-              });
-        }
-        });
-</script>
+}
 

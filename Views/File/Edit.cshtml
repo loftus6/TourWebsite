@@ -69,31 +69,12 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 
-<script>
-
-    var text = document.getElementById('descriptionVal').value;
-        console.log(text);
-
-        tinymce.init({
-
-        selector: 'textarea#tiny',
-        license_key: 'gpl',
-            plugins: 'lists',
-    toolbar: 'numlist bullist',
-        promotion: false,
-            setup: function (editor) {
-              editor.on('init', function (e) {
-                editor.setContent(text);
-              });
-        }
-        });
-</script>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("TinyMce");}
 
 
 }

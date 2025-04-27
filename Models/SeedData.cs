@@ -26,10 +26,27 @@ namespace TourWebsite.Models
 
                 var mainPage = new NonTourPage();
                 mainPage.Title = "Main";
-                mainPage.BackgroundColor = "#e0fff3";
-                mainPage.AccentColor1 = "#becfc8";
+                mainPage.MainColor = "#e0fff3";
+                mainPage.AccentColor = "#becfc8";
+
+                mainPage.ColorName1 = "Background Color";
+                mainPage.ColorName2 = "Toolbar Color";
 
                 context.NonTourPage.Add(mainPage);
+
+                var privacyPage = new NonTourPage();
+                privacyPage.Title = "Privacy";
+                
+
+                context.NonTourPage.Add(privacyPage);
+
+
+                var mapPage = new NonTourPage();
+                mapPage.Title = "Tour Map";
+                mapPage.ColorName1 = "Button Color";
+
+                context.NonTourPage.Add(mapPage);
+
 
                 context.SaveChanges();
 

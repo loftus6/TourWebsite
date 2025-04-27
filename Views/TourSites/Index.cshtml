@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-@model TourWebsite.Models.Tours.TourId
+@using TourWebsite.Areas.Identity.Data
+@model NonTourPage
 @inject IAuthorizationService auth
 
 @{
@@ -10,17 +11,22 @@
 
 }
 
-<h1>Tours</h1>
+<div>
 
+    <table cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(70, 130, 180, 0)">
+        <tr>
+            <td class="col-12" style="vertical-align: text-top;">
+                @Html.Raw(Model.Description)
+            </td>
+        </tr>
+    </table>
 
-      
-<b>Click on a site to learn more </b>
-<br />
-<a asp-action="ListView">List View</a>
+</div>
+<a class="btn btn-primary" asp-action="ListView" style="background-color:@Model.MainColor; border-color:@Model.MainColor">List View</a>
 
 @if (authorized1.Succeeded)
 {
-    <a asp-action="AddNewTour">Add New Tour</a>
+    <a class="btn btn-primary" asp-action="AddNewTour" style="background-color:@Model.MainColor; border-color:@Model.MainColor">Add New Tour</a>
 }
 
 @section Scripts { 

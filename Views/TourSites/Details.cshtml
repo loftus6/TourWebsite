@@ -32,7 +32,7 @@ else {
             var prev = await _context.TourSites.FindAsync(lastId);
             if (prev != null)
             {
-                <a asp-action="Details" asp-route-id="@prev.Id">Previous Tour: @prev.Title</a>
+                <a asp-action="Details" class="btn btn-primary" asp-route-id="@prev.Id">Previous Tour: @prev.Title</a>
             }
         }
 
@@ -43,7 +43,7 @@ else {
             var next = await _context.TourSites.FindAsync(Model.Item1.NextTourSiteID);
             if (next != null)
             {
-                <a asp-action="Details" asp-route-id="@next.Id">Next Tour: @next.Title</a>
+                <a asp-action="Details" class="btn btn-primary" asp-route-id="@next.Id">Next Tour: @next.Title</a>
 
             }
         }
@@ -131,14 +131,14 @@ else {
 
     @if (authorized3.Succeeded)
     {
-        <a asp-action="Edit" asp-route-id="@Model.Item1.Id">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.Item1.Id" class="btn btn-primary">Edit</a>
     }
     @if (authorized.Succeeded)
     {
-        <a asp-action="Delete" asp-route-id="@Model.Item1.Id">Delete</a>
+        <a asp-action="Delete" asp-route-id="@Model.Item1.Id" class="btn btn-primary">Delete</a>
     }
     @if (!Model.Item2)
     {
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
     }
 </div>

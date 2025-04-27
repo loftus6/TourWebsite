@@ -2,10 +2,22 @@
     ViewData["Title"] = "Privacy Policy";
 
 }
-<h1>@ViewData["Title"]</h1>
+
+@model TourWebsite.Areas.Identity.Data.NonTourPage
+
+<div>
 
 
-<p>Use this page to detail your site's privacy policy.</p>
+    <table cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(70, 130, 180, 0)">
+        <tr>
+            <td class="col-12" style="vertical-align: text-top;">
+                @Html.Raw(Model.Description)
+            </td>
+        </tr>
+    </table>
+
+
+</div>
 
 
 

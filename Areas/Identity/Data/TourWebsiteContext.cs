@@ -18,10 +18,16 @@ public class TourWebsiteContext : IdentityDbContext<TourWebsiteUser>
 
     public async Task<NonTourPage> GetMain()
     {
+        return await GetByName("Main");
+
+    }
+
+    public async Task<NonTourPage> GetByName(string name)
+    {
         var pages = from m in NonTourPage
                     select m;
 
-        var mainList = pages.Where(s => s.Title == "Main");
+        var mainList = pages.Where(s => s.Title == name);
 
         var listAsync = await mainList.ToListAsync();
 

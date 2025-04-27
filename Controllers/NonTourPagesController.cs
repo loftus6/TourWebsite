@@ -85,16 +85,7 @@ namespace TourWebsite.Controllers
                 return NotFound();
             }
 
-            var edit = new PageEdit();
-
-            edit.Id = nonTourPage.Id;
-            edit.Description = nonTourPage.Description;
-            edit.BackgroundColor = nonTourPage.BackgroundColor;
-            edit.Title = nonTourPage.Title;
-            edit.AccentColor1 = nonTourPage.AccentColor1;
-            edit.ThumbnailID = nonTourPage.ThumbnailID;
-
-            return View(edit);
+            return View(nonTourPage);
         }
 
         // POST: NonTourPages/Edit/5
@@ -102,11 +93,11 @@ namespace TourWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, PageEdit pageEdit)
+        public async Task<IActionResult> Edit(string id, NonTourPage pageEdit)
         {
             if (ModelState.IsValid)
             {
-                var page = await _context.NonTourPage.FindAsync(pageEdit.Id);
+                var page = await _context.NonTourPage.FindAsync(id);
 
                 if (page is null)
                 {
@@ -124,25 +115,9 @@ namespace TourWebsite.Controllers
                 page.Description = pageEdit.Description;
 
 
-                page.BackgroundColor = pageEdit.BackgroundColor;
-                page.AccentColor1 = pageEdit.AccentColor1;
+                page.MainColor = pageEdit.MainColor;
+                page.AccentColor = pageEdit.AccentColor;
 
-
-
-                var thumb = pageEdit.ThumbnailID; //adds thumbnail image
-
-
-                if (thumb != null && thumb != "") //if file is existing
-                {
-                    page.ThumbnailID = thumb;
-                }
-
-
-                if (pageEdit.RemoveThumbnail)
-                {
-
-                    page.ThumbnailID = null;
-                }
 
 
                 try
@@ -166,38 +141,6 @@ namespace TourWebsite.Controllers
             return await Edit(pageEdit.Id);
         }
 
-        // GET: NonTourPages/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nonTourPage = await _context.NonTourPage
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (nonTourPage == null)
-            {
-                return NotFound();
-            }
-
-            return View(nonTourPage);
-        }
-
-        // POST: NonTourPages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var nonTourPage = await _context.NonTourPage.FindAsync(id);
-            if (nonTourPage != null)
-            {
-                _context.NonTourPage.Remove(nonTourPage);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool NonTourPageExists(string id)
         {

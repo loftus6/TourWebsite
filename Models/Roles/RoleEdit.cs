@@ -10,9 +10,9 @@ namespace TourWebsite.Models.Roles
         public IEnumerable<TourWebsiteUser> Members { get; set; }
 
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
-        [Required]
-        [StringLength(30)]
+        //[RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
+        //[Required]
+        //[StringLength(30)]
         public string Email { get; set; }
     }
 }

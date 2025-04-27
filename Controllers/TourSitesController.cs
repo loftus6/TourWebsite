@@ -41,7 +41,7 @@ namespace TourWebsite.Controllers
         {
 
 
-            return View(new TourId());
+            return View(await _context.GetByName("Tour Map"));
         }
 
         public async Task<IActionResult> AddNewTour()

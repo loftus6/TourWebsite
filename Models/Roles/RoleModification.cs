@@ -11,7 +11,6 @@ namespace TourWebsite.Models.Roles
 
 
 
-        [EmailAddress(ErrorMessage = "Invalid Email.")]
         public string? AddEmail { get; set; }
 
         public string[]? DeleteIds { get; set; }

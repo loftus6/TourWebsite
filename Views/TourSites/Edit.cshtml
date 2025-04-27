@@ -35,7 +35,7 @@
             {
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
-                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#ThumbnailData'>Pick Thumbnail</a>
+                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager btn btn-primary" extra-data='#ThumbnailData'>Pick Thumbnail</a>
                         <script type="application/json" id="ThumbnailData">
                             {
                             "Target": "ThumbnailBox",
@@ -71,7 +71,7 @@
             {
                 <table class="table table-bordered table-sm">
                     <div class="form-group">
-                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager" extra-data='#AudioData'>Pick Audio Track</a>
+                        <a href="javascript:void(0);" name="/File/AttachmentList" class="modalManager btn btn-primary" extra-data='#AudioData'>Pick Audio Track</a>
                         <script type="application/json" id="AudioData">
                             {
                             "Target": "AudioBox",
@@ -129,7 +129,7 @@
                 
 
             </table>
-            <a asp-action="MoveTour" asp-route-id="@Model.TourID">Move Tour</a>
+            <a asp-action="MoveTour" class="btn btn-primary" asp-route-id="@Model.TourID">Move Tour</a>
 
 
             <table class="table table-sm" cellpadding="0" cellspacing="0" border="0">
@@ -162,7 +162,7 @@
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
                         <label asp-for="EmailViewer" class="control-label">Add Viewers</label>
-                            <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData'>Pick user</a>
+                            <a href="javascript:void(0);" name="/Role/UserList" class="modalManagerbtn btn-primary" extra-data='#MyScriptData'>Pick user</a>
                             <script type="application/json" id="MyScriptData">
                                 {
                                 "Target": "ViewerBox"
@@ -197,7 +197,7 @@
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
                     <label asp-for="Email" class="control-label">Add editors</label>
-                    <a href="javascript:void(0);" name="/Role/UserList" class="modalManager" extra-data='#MyScriptData2'>Pick user</a>
+                    <a href="javascript:void(0);" name="/Role/UserList" class="modalManager btn btn-primary" extra-data='#MyScriptData2'>Pick user</a>
                     <script type="application/json" id="MyScriptData2">
                         {
                         "Target": "EmailBox"
@@ -231,7 +231,7 @@
                 <table class="table table-bordered table-sm">
                     <div type="email" class="form-group">
                         <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Tour: @Model.NextTourTitle</label>
-                        <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager" extra-data='#TourSiteData'>Pick Next Tour</a>
+                        <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager btn btn-primary" extra-data='#TourSiteData'>Pick Next Tour</a>
                         <script type="application/json" id="TourSiteData">
                             {
                             "Target": "Next Tour",
@@ -281,26 +281,13 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 
-<script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("TinyMce");
+    }
 
-    var text = document.getElementById('descriptionVal').value;
-        console.log(text);
-
-        tinymce.init({
-
-        selector: 'textarea#tiny',
-        license_key: 'gpl',
-            plugins: 'lists',
-    toolbar: 'numlist bullist',
-        promotion: false,
-            setup: function (editor) {
-              editor.on('init', function (e) {
-                editor.setContent(text);
-              });
-        }
-        });
-</script>
+}
 
