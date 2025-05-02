@@ -17,7 +17,7 @@
 {
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="$('#myModal').modal('hide');">×</button>
-        <h2>Details</h2>
+        <h3>@Model.Item1.Title</h3>
     </div>
 }
 else {
@@ -32,7 +32,18 @@ else {
             var prev = await _context.TourSites.FindAsync(lastId);
             if (prev != null)
             {
-                <a asp-action="Details" class="btn btn-primary" asp-route-id="@prev.Id">Previous Tour: @prev.Title</a>
+                if (prev != null)
+                {
+                    AuthorizationResult nextAuth1 = await authService.AuthorizeAsync(User, prev.ApprovedEditUsers, "TourAccess"); //Who can edit this
+                    AuthorizationResult nextAuth2 = await authService.AuthorizeAsync(User, prev.ApprovedUsers, "TourAccess"); //Who can view this
+
+                    if (nextAuth1.Succeeded || nextAuth2.Succeeded)
+                    {
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@prev.Id">Previous Tour: @prev.Title</a>
+
+                    }
+
+                }
             }
         }
 
@@ -43,7 +54,14 @@ else {
             var next = await _context.TourSites.FindAsync(Model.Item1.NextTourSiteID);
             if (next != null)
             {
-                <a asp-action="Details" class="btn btn-primary" asp-route-id="@next.Id">Next Tour: @next.Title</a>
+                AuthorizationResult nextAuth1 = await authService.AuthorizeAsync(User, next.ApprovedEditUsers, "TourAccess"); //Who can edit this
+                AuthorizationResult nextAuth2 = await authService.AuthorizeAsync(User, next.ApprovedUsers, "TourAccess"); //Who can view this
+
+                if (nextAuth1.Succeeded || nextAuth2.Succeeded)
+                {
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@next.Id">Next Tour: @next.Title</a>
+                    
+                }
 
             }
         }
@@ -67,16 +85,6 @@ else {
         }
     </div>
     <dl class="row">
-        <dt class = "col-sm-4">
-            @Html.DisplayNameFor(model => model.Item1.Title)
-        </dt>
-        <dd class = "col-sm-8">
-            @Html.DisplayFor(model => model.Item1.Title)
-        </dd>
-        <dt class = "col-sm-4">
-            @Html.DisplayNameFor(model => model.Item1.Description)
-        </dt>
-        <br />
         <dd class = "col-sm-8">
             @Html.Raw(Model.Item1.Description)
         </dd>

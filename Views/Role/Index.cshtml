@@ -24,7 +24,28 @@
     </tbody>
 </table>
 
-<h3>Manage User Roles</h3>
+<h3>Manage Users</h3>
+
+
+
+<form asp-action="InviteUser" method="post" enctype="multipart/form-data">
+    <table class="table table-sm">
+        <label class="control-label">Invite User</label>
+        <thead class="form-group">
+            <tr class="form-group">
+                <td class="col-sm-7">
+                <input name="email" class="form-control" value="" />
+                </td>
+                <td class="col-sm-1">
+                    </td>
+
+                <td class="col-sm-3">
+                    <input type="submit" value="Send" class="btn btn-primary" style="width:60%" />
+                </td>
+            </tr>
+        </thead>
+    </table>
+</form>
 
 <table class="table">
     <tbody>

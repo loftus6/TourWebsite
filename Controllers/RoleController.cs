@@ -12,6 +12,10 @@ using TourWebsite.Areas.Identity.Data;
 using TourWebsite.Data;
 using TourWebsite.Models.Roles;
 
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
+
 namespace TourWebsite.Controllers
 {
     public class RoleController : Controller
@@ -22,13 +26,15 @@ namespace TourWebsite.Controllers
 
         private RoleManager<TourWebsiteRole> roleManager;
         private UserManager<TourWebsiteUser> userManager;
+        private IConfiguration config;
 
-        public RoleController(TourWebsiteContext context, RoleManager<TourWebsiteRole> roleMgr, UserManager<TourWebsiteUser> userMrg)
+        public RoleController(TourWebsiteContext context, RoleManager<TourWebsiteRole> roleMgr, UserManager<TourWebsiteUser> userMrg, IConfiguration config)
 
         {
             _context = context;
             roleManager = roleMgr;
             userManager = userMrg;
+            this.config = config;
         }
 
         // GET: Role
@@ -138,6 +144,41 @@ namespace TourWebsite.Controllers
 
 
             return await Update(model.RoleId);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> InviteUser(string email)
+        {
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Huntington Historic Tour", config["SMTPSender"]));
+            message.To.Add(new MailboxAddress("", email));
+            message.Subject = "Huntington Historic Tour Management";
+
+            message.Body = new TextPart("plain")
+            {
+                Text = @"Hello,
+
+
+Please click the link below to make an account for the huntington historic tour site.
+
+This message was sent automatically, please do not respond.
+                "
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("mail.smtp2go.com", 2525, false);
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(config["SMTPUser"], config["SMTPPassword"]);
+
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
