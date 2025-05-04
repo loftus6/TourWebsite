@@ -133,15 +133,15 @@
 
             <table class="table table-bordered table-sm">
                 <div type="email" class="form-group">
-                    <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Tour:</label>
-                    <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager btn btn-primary" extra-data='#TourSiteData'>Pick Next Tour</a>
+                    <label asp-for="NextTourID" id="TourLabel" class="control-label">Next Site:</label>
+                    <a href="javascript:void(0);" name="/TourSites/TourListPop" class="modalManager btn btn-primary" extra-data='#TourSiteData'>Pick Next Site</a>
                     <script type="application/json" id="TourSiteData">
                         {
-                        "Target": "Next Tour",
+                        "Target": "Next Site",
                         "Target2": "TourLabel"
                         }
                     </script>
-                    <input asp-for="NextTourID" id="Next Tour" class="form-control" hidden></input>
+                    <input asp-for="NextTourID" id="Next Site" class="form-control" hidden></input>
                     <span asp-validation-for="NextTourID" class="text-danger"></span>
                 </div>
             </table>
