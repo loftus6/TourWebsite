@@ -10,8 +10,9 @@ Afterwards, open the sln with visual studio. If all goes well, the proper librar
 You must have sql server installed on your computer. You can use the visual studio server explorer to see if you have any databases running locally.
 
 Make sure you go into appsettings.json and change "TourWebsiteContextConnection" to your connection string for your local server, which may be similar to:
-_
-Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False_
+
+
+_Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False_
 
 Then open the package manager console and run
 
