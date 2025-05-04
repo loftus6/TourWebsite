@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +53,9 @@ namespace TourWebsite.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        
         [TempData]
+        
         public string ErrorMessage { get; set; }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace TourWebsite.Areas.Identity.Pages.Account
             /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+            
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -102,7 +106,7 @@ namespace TourWebsite.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, bool DefaultPassword=false)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -116,6 +120,9 @@ namespace TourWebsite.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    if (DefaultPassword) 
+                        return RedirectToPage("./Manage/ChangePassword");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

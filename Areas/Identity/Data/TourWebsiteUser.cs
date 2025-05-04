@@ -9,6 +9,5 @@ namespace TourWebsite.Areas.Identity.Data;
 // Add profile data for application users by adding properties to the TourWebsiteUser class
 public class TourWebsiteUser : IdentityUser
 {
-
 }
 

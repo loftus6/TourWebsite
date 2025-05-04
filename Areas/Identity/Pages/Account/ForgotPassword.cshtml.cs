@@ -15,17 +15,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using TourWebsite.Areas.Identity.Data;
 
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
+
 namespace TourWebsite.Areas.Identity.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<TourWebsiteUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private IConfiguration config;
 
-        public ForgotPasswordModel(UserManager<TourWebsiteUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<TourWebsiteUser> userManager, IEmailSender emailSender, IConfiguration config)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            this.config = config;
         }
 
         /// <summary>
@@ -65,17 +71,39 @@ namespace TourWebsite.Areas.Identity.Pages.Account
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Fairfield History WV", config["SMTPSender"]));
+                message.To.Add(new MailboxAddress("", Input.Email));
+                message.Subject = "Password Reset";
+                
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
+                
+                var bodyText =
+                    "Hello, \n Please click the link below to reset your password\n" +
+                    callbackUrl + "\n this was an automatically sent message, please do not reply"; 
+                
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                message.Body = new TextPart("plain")
+                {
+                    Text = bodyText
+                };
 
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("mail.smtp2go.com", 2525, false);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(config["SMTPUser"], config["SMTPPassword"]);
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+                
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
 

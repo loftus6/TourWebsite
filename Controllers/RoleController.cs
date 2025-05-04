@@ -27,14 +27,65 @@ namespace TourWebsite.Controllers
         private RoleManager<TourWebsiteRole> roleManager;
         private UserManager<TourWebsiteUser> userManager;
         private IConfiguration config;
+        private readonly IUserStore<TourWebsiteUser> userStore;
+        private readonly IUserEmailStore<TourWebsiteUser> emailStore;
+        
+        
+        private List<string> colorsList = new List<string>()
+        {
+            "Red",
+            "Blue",
+            "Green",
+            "Purple",
+            "Indigo",
+            "Orange",
+            "Magenta",
+        };
+        
+        private List<string> animalList = new List<string>()
+        {
+            "Labrador",
+            "Leopard",
+            "Horse",
+            "Cheetah",
+            "Falcon",
+            "Dolphin",
+            "Salamander",
+        };
+        
+        private List<string> characterList = new List<string>()
+        {
+            "!",
+            "#",
+            "$",
+            "*",
+            "%",
+            "^",
+            "~",
+        };
 
-        public RoleController(TourWebsiteContext context, RoleManager<TourWebsiteRole> roleMgr, UserManager<TourWebsiteUser> userMrg, IConfiguration config)
+        public string PasswordGen()
+        {
+            Random rnd = new Random();
+            var pass = "";
+            pass += colorsList[rnd.Next(0, colorsList.Count)];
+            pass += animalList[rnd.Next(0, animalList.Count)];
+            pass += rnd.Next(0, 1000);
+            pass += characterList[rnd.Next(0, characterList.Count)];
+
+            return pass;
+        }
+
+        public RoleController(TourWebsiteContext context, RoleManager<TourWebsiteRole> roleMgr, 
+            UserManager<TourWebsiteUser> userMrg, IConfiguration config, IUserStore<TourWebsiteUser> userStore)
 
         {
             _context = context;
             roleManager = roleMgr;
             userManager = userMrg;
             this.config = config;
+            this.userStore = userStore;
+            this.emailStore = (IUserEmailStore<TourWebsiteUser>)userStore;
         }
 
         // GET: Role
@@ -153,31 +204,55 @@ namespace TourWebsite.Controllers
         {
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Huntington Historic Tour", config["SMTPSender"]));
+            message.From.Add(new MailboxAddress("Fairfield History WV", config["SMTPSender"]));
             message.To.Add(new MailboxAddress("", email));
-            message.Subject = "Huntington Historic Tour Management";
+            message.Subject = "Welcome to Fairfield History WV";
+            
+            var user = Activator.CreateInstance<TourWebsiteUser>();
+            
+            var password = PasswordGen();
+            
+            await userStore.SetUserNameAsync(user, email, CancellationToken.None);
+            await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+            var result = await userManager.CreateAsync(user, password);
 
-            message.Body = new TextPart("plain")
+
+            if (result.Succeeded)
             {
-                Text = @"Hello,
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var result2 = await userManager.ConfirmEmailAsync(user, code);
+                var EmailConfirmationUrl = Url.Page(
+                    "/Account/Login",
+                    pageHandler: null,
+                    values: new { area = "Identity", DefaultPassword=true },
+                    protocol: Request.Scheme);
 
+                var bodyText =
+                    "Hello, \n Please click the link below to join fairfield history WV.\n" +
+                    "Login with the following credentials:\n" +
+                    "Username: " +email +"\n" +
+                    "Password: " +password +"\n"+
+                    EmailConfirmationUrl + "\n this was an automatically sent message, please do not reply"; 
+                
 
-Please click the link below to make an account for the huntington historic tour site.
+                message.Body = new TextPart("plain")
+                {
+                    Text = bodyText
+                };
 
-This message was sent automatically, please do not respond.
-                "
-            };
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("mail.smtp2go.com", 2525, false);
 
-            using (var client = new SmtpClient())
-            {
-                client.Connect("mail.smtp2go.com", 2525, false);
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(config["SMTPUser"], config["SMTPPassword"]);
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(config["SMTPUser"], config["SMTPPassword"]);
-
-                client.Send(message);
-                client.Disconnect(true);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
             }
+            
+            
             return RedirectToAction(nameof(Index));
         }
     }
