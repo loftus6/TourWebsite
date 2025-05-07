@@ -16,7 +16,7 @@ _Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=
 
 Then open the package manager console and run
 
-_Add-Migration InitalCreate_ (The second parameter can be any name)
+_Add-Migration InitialCreate_ (The second parameter can be any name)
 
 Followed by
 
